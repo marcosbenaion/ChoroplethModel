@@ -5,9 +5,9 @@ app.controller('MainCtrl', function($scope, $http) {
 
   // Set the Map Options to be applied when the map is set.
   var mapOptions = {
-    zoom: 4,
+    zoom: 12,
     scrollwheel: false,
-    center: new google.maps.LatLng(-1.396415, -48.459607),
+    center: new google.maps.LatLng(-1.424147, -48.459806),
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     mapTypeControl: false,
     mapTypeControlOptions: {
@@ -25,12 +25,12 @@ app.controller('MainCtrl', function($scope, $http) {
 
   // Create the state data layer and load the GeoJson Data
   var stateLayer = new google.maps.Data();
-  stateLayer.loadGeoJson('https://gist.githubusercontent.com/dmarg/b2959e771ae680acbc95/raw/815a03f55d028dace4371c27d0b787ca0f2f2b5d/states.json');
+  stateLayer.loadGeoJson('bairros.json');
 
   // Set and apply styling to the stateLayer
   stateLayer.setStyle(function(feature) {
     return {
-      fillColor: getColor(feature.getProperty('Populacao')), // call function to get color for state based on the COLI (Cost of Living Index)
+      fillColor: getColor(feature.getProperty('COLI')), // call function to get color for state based on the COLI (Cost of Living Index)
       fillOpacity: 0.8,
       strokeColor: '#b3b3b3',
       strokeWeight: 1,
@@ -55,8 +55,8 @@ app.controller('MainCtrl', function($scope, $http) {
   stateLayer.addListener('click', function(e) {
     console.log(e);
     infoWindow.setContent('<div style="line-height:1.00;overflow:hidden;white-space:nowrap;">' +
-      e.feature.getProperty('Nome') + '<br> COLI: ' +
-      e.feature.getProperty('Populacao') + '</div>');
+      e.feature.getProperty('NAME') + '<br> COLI: ' +
+      e.feature.getProperty('COLI') + '</div>');
 
     var anchor = new google.maps.MVCObject();
     anchor.set("position", e.latLng);
