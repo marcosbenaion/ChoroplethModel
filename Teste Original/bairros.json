@@ -1,0 +1,51 @@
+{
+    "type": "FeatureCollection",
+    "features":
+    [
+        {
+            "type": "Feature",
+            "properties":
+            {
+                "Nome": "Coqueiro",
+                "Num_Escolas": 2,
+                "Num_Hospitais": 3,
+                "Populacao": 190.3
+            },
+            "geometry":
+            {
+                "type": "Polygon", "coordinates":
+                [
+                    [
+                        [-1.339097, -48.424717],
+                        [-1.338207, -48.428504],
+                        [-1.334431, -48.426101],
+                        [-1.339097, -48.424717]
+                    ]
+                ]
+            }
+        },
+        
+        {
+            "type": "Feature",
+            "properties":
+            {
+                "Nome": "Umarizal",
+                "Num_Escolas": 2,
+                "Num_Hospitais": 3,
+                "Populacao": 108.3
+            },
+            "geometry":
+            {
+                "type": "Polygon", "coordinates":
+                [
+                    [
+                        [-1.396415, -48.459607],
+                        [-1.397895, -48.455562],
+                        [-1.401434, -48.460519],
+                        [-1.396415, -48.459607]
+                    ]
+                ]
+            }
+        }
+    ]
+}
