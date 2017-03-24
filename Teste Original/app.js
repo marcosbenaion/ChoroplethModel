@@ -25,7 +25,7 @@ app.controller('MainCtrl', function($scope, $http) {
 
   // Create the state data layer and load the GeoJson Data
   var stateLayer = new google.maps.Data();
-  stateLayer.loadGeoJson('bairros.json');
+  stateLayer.loadGeoJson('bairrosCheckpointUniversitario.json');
 
   // Set and apply styling to the stateLayer
   stateLayer.setStyle(function(feature) {
@@ -55,7 +55,7 @@ app.controller('MainCtrl', function($scope, $http) {
   stateLayer.addListener('click', function(e) {
     console.log(e);
     infoWindow.setContent('<div style="line-height:1.00;overflow:hidden;white-space:nowrap;">' +
-      e.feature.getProperty('NAME') + '<br> COLI: ' +
+      e.feature.getProperty('Nome') + '<br> COLI: ' +
       e.feature.getProperty('COLI') + '</div>');
 
     var anchor = new google.maps.MVCObject();
