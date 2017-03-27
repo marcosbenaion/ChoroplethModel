@@ -25,7 +25,7 @@ app.controller('MainCtrl', function($scope, $http) {
 
   // Create the state data layer and load the GeoJson Data
   var stateLayer = new google.maps.Data();
-  stateLayer.loadGeoJson('bairrosCheckpointTerraFirme.json');
+  stateLayer.loadGeoJson('bairrosCheckpointParqueVerde.json');
 
   // Set and apply styling to the stateLayer
   stateLayer.setStyle(function(feature) {
