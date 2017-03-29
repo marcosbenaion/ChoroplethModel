@@ -1,0 +1,16 @@
+<head>
+ <meta charset="utf-8">
+    <link href="d3.geomap.css" rel="stylesheet">
+    <script src="d3.geomap.dependencies.min.js"></script>
+    <script src="d3.geomap.min.js"></script>
+
+</head>
+
+<body>
+<div id="map"></div>
+<script>
+var map = d3.geomap().geofile('states.json');
+
+d3.select('#map')
+.call(map.draw, map);
+</script>
