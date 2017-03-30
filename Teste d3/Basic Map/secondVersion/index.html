@@ -1,0 +1,37 @@
+<html>
+<head>
+  <title>A D3 map</title>
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script src="bairrosCheckpointParqueVerde.js"></script>
+</head>
+<body>
+  <script>
+var width = 700,
+    height = 540;
+
+var svg = d3.select( "body" )
+  .append( "svg" )
+  .attr( "width", width )
+  .attr( "height", height );
+
+var g = svg.append( "g" );
+
+var albersProjection = d3.geo.equirectangular()
+  .scale( 190000 )
+  .rotate( [48.46538186073303,0] )
+  .center( [0,-1.4077418082833562] )
+  .translate( [width/2,height/2] );
+
+var geoPath = d3.geo.path()
+    .projection( albersProjection );
+
+g.selectAll( "path" )
+  .data( bairros_json.features )
+  .enter()
+  .append( "path" )
+  .attr( "fill", "#ccc" )
+  .attr( "d", geoPath );
+
+  </script>
+</body>
+</html>
