@@ -1,16 +1,47 @@
-<head>
- <meta charset="utf-8">
-    <link href="d3.geomap.css" rel="stylesheet">
-    <script src="d3.geomap.dependencies.min.js"></script>
-    <script src="d3.geomap.min.js"></script>
-
-</head>
-
+<html>
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+path {
+  stroke: white;
+  stroke-width: 0.25px;
+  fill: grey;
+}
+</style>
 <body>
-<div id="map"></div>
+<script type="text/javascript" src="d3.js"></script>
+<script src="topojson.min.js"></script>
 <script>
-var map = d3.geomap().geofile('states.json');
+var width = 960,
+    height = 500;
 
-d3.select('#map')
-.call(map.draw, map);
+var projection = d3.geo.mercator()
+    .center([0, 5 ])
+    .scale(900)
+    .rotate([-180,0]);
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+var path = d3.geo.path()
+    .projection(projection);
+
+var g = svg.append("g");
+
+// load and display the World
+d3.json("world-110m2.json", function(error, map) {
+    svg.selectAll("path")
+       .data(topojson.feature(type, type.objects.bairrosSU_A3).features)
+       .enter()
+       .append("path")
+       .attr("d", path)
+       .style("fill", function(d) {
+           if (d.properties.region == "XYZ")
+               {return "red"}
+           else {return "gray"}
+       })});
+
 </script>
+</body>
+</html>
