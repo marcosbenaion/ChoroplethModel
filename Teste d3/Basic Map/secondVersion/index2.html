@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+/* CSS goes here. */
+
+</style>
+<body>
+<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="//d3js.org/topojson.v1.min.js"></script>
+<script>
+    
+var width = 700,
+    height = 540;
+    
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+/* JavaScript goes here. */
+    
+d3.json("bairrosSimplifiedTopojson.json", function(error, bairros){
+    if (error) return console.error(error);
+    console.log(bairros);
+    
+    var bairrosSU_A3 = topojson.feature(bairros, bairros.objects.bairrosSU_A3);
+    
+    var projection = d3.geo.equirectangular()
+        .scale(190000)
+        .rotate( [48.46538186073303,0] )
+        .center( [0,-1.4077418082833562] )
+        .translate([width / 2, height / 2]);
+    
+    var path = d3.geo.path()
+        .projection(projection);
+    
+    svg.append("path")
+        .datum(bairrosSU_A3)
+        .attr("d", path);
+    
+    
+});
+
+</script>
