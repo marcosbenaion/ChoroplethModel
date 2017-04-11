@@ -24,6 +24,16 @@ var svg = d3.select("body").append("svg")
     .attr("height", height);
 
 /* JavaScript goes here. */
+var test;
+    
+d3.csv('populacao.csv', function(error, rows) {
+  var obj = {};
+  rows.forEach(function(d){
+    obj[d.id] = [d.bairro, d.populacao];
+  });
+  console.log(obj);
+    test = obj;
+});
     
 d3.json("bairrosCorrigido.json", function(error, bairros){
     if (error) return console.error(error);
