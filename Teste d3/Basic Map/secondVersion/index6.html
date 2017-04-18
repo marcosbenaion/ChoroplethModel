@@ -26,11 +26,7 @@ var svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
     
-var projection = d3.geoEquirectangular()
-    .scale(190000)
-    .rotate( [48.46538186073303,0] )
-    .center( [0,-1.4077418082833562] )
-    .translate([width / 2, height / 2]);
+var projection = d3.geoEquirectangular();
     
 var unemployment = d3.map();
     
@@ -79,21 +75,39 @@ g.call(d3.axisBottom(x)
     .remove();
     
 var array = {};
+    
+    projection
+      .scale(1)
+      .translate([0, 0]);
 
 d3.queue()
-    .defer(d3.json, "bairrosModificado.json")
-    .defer(d3.tsv, "unemployment.tsv", function(d) { array[d.id] = d.rate; })
+    .defer(d3.json, "bairrosFinal.json")
+    .defer(d3.tsv, "unemploymentOr.tsv", function(d) { array[d.id] = d.rate; })
     .await(ready);
 
 function ready(error, bairros) {
   if (error) throw error;
     
-    console.log(bairros.objects.bairros);
+    var feat = topojson.feature(bairros, bairros.objects.collection).features;
+    
+    var state = feat.filter(function(d) { return d.properties.id === 1000; })[0];
+    
+    var b = path.bounds(state),
+      s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
+      t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
+    
+    console.log(b);
+    console.log(s);
+    console.log(t);
+    
+    projection
+      .scale(s)
+      .translate(t);
     
     svg.append("g")
       .attr("class", "states")
     .selectAll("path")
-    .data(topojson.feature(bairros, bairros.objects.bairros).features)
+    .data(topojson.feature(bairros, bairros.objects.collection).features)
     .enter().append("path")
       .attr("fill", function(d) { 
         var prop = d.properties.id;
