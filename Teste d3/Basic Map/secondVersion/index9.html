@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+/* CSS goes here. */
+    
+.counties {
+  fill: none;
+}
+
+.states {
+  fill: none;
+  stroke: #fff;
+  stroke-linejoin: round;
+}
+
+</style>
+<body>
+<svg width="960" height="600"></svg>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script src="//d3js.org/topojson.v2.min.js"></script>
+<script src="simple_statistics.js"></script>
+<script>
+    
+var svg = d3.select("svg"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height");
+    
+var projection = d3.geoEquirectangular();
+    
+ var path = d3.geoPath()
+    .projection(projection);
+    
+var scales = {};
+
+var color = d3.scaleLinear()
+    .domain([0,3000,6000,100000])
+    .range(['#d9f0a3','#005a32','#fef0d9','#990000']);
+
+var g = svg.append("g")
+    .attr("class", "key")
+    .attr("transform", "translate(0,40)");
+    
+var array = {};
+    
+    projection
+      .scale(1)
+      .translate([0, 0]);
+
+d3.queue()
+    .defer(d3.json, "bairrosFinal.json")
+    .defer(d3.tsv, "populacaoRate.tsv", function(d) { array[d.id] = d.rate; })
+    .await(ready);
+
+function ready(error, bairros, unemployment) {
+  if (error) throw error;
+    
+    var feat = topojson.feature(bairros, bairros.objects.collection);
+
+  scales.jenks9 = d3.scaleThreshold()
+      .domain(ss.jenks(array, 9))
+      .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
+    
+    var b = path.bounds(feat),
+      s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
+      t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
+    
+    console.log(b);
+    console.log(s);
+    console.log(t);
+    console.log(path.bounds(feat));
+    
+    console.log(scales);
+    
+    projection
+      .scale(s)
+      .translate(t);
+    
+    svg.append("g")
+      .attr("class", "states")
+    .selectAll("path")
+    .data(topojson.feature(bairros, bairros.objects.collection).features)
+    .enter().append("path")
+      .attr("fill", function(d) { 
+        var prop = d.properties.id;
+        var ratio = array[prop];
+        console.log("Bairro: " + prop + ". Cor: " + color(d.rate = array[prop]));
+        return color(d.rate = array[prop]); })
+      .attr("d", path)
+    .append("title")
+      .text(function(d) { return "Bairro " + d.properties.id + ". Populacao: " + d.rate; });
+    
+    
+}
+</script>

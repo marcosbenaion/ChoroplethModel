@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font:normal 14px sans-serif;
+}
+
+#form {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+input {
+  margin-right: 10px;
+}
+
+.states {
+  fill: none;
+  stroke: #fff;
+  stroke-linejoin: round;
+}
+
+path {
+  -webkit-transition: fill 200ms linear;
+}
+
+.q0-9 { fill:rgb(247,251,255); }
+.q1-9 { fill:rgb(222,235,247); }
+.q2-9 { fill:rgb(198,219,239); }
+.q3-9 { fill:rgb(158,202,225); }
+.q4-9 { fill:rgb(107,174,214); }
+.q5-9 { fill:rgb(66,146,198); }
+.q6-9 { fill:rgb(33,113,181); }
+.q7-9 { fill:rgb(8,81,156); }
+.q8-9 { fill:rgb(8,48,107); }
+
+</style>
+<body>
+<div id='form'>
+  <input checked='true' type='radio' name='scale' id='jenks9' /><label for='jenks9'>jenks 9</label>
+  <input type='radio' name='scale' id='quantize' /><label for='quantize'>quantize</label>
+</div>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="simple_statistics.js"></script>
+<script src="http://d3js.org/queue.v1.min.js"></script>
+<script src="http://d3js.org/topojson.v0.min.js"></script>
+<script>
+
+var width = 960,
+    height = 500;
+
+var scales = {};
+
+scales.quantize = d3.scale.quantize()
+    .domain([0, .15])
+    .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
+
+var path = d3.geo.path();
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+queue()
+    .defer(d3.json, "us.json")
+    .defer(d3.tsv, "unemploymentOr.tsv")
+    .await(ready);
+
+function ready(error, us, unemployment) {
+  var rateById = {};
+
+  unemployment.forEach(function(d) { rateById[d.id] = +d.rate; });
+
+  scales.jenks9 = d3.scale.threshold()
+      .domain(ss.jenks({1000: "1170", 1001: "8553", 1002: "17520", 1003: "6890", 1004: "19712", 1005: "1942", 1006: "1827", 1007: "2414", 1008: "26003", 1009: "19136", 1010: "29379", 1011: "776", 1012: "6019", 1013: "27781", 1014: "6156", 1015: "26722", 1016: "13804", 1017: "5445", 1018: "794", 1019: "24424", 1020: "1159", 1021: "12128", 1022: "42758", 1023: "51776", 1024: "31264", 1025: "11644", 1026: "16642", 1027: "851", 1028: "12385", 1029: "94610", 1030: "1588", 1031: "1939", 1032: "64478", 1033: "36224", 1034: "2851", 1035: "13681", 1036: "3345", 1037: "30534", 1038: "132", 1039: "66708", 1040: "65844", 1041: "515", 1042: "61439", 1043: "1519", 1044: "1098", 1045: "20504", 1046: "9934", 1047: "315", 1048: "34778", 1049: "39126", 1050: "69608", 1051: "13245", 1052: "283", 1053: "748", 1054: "22589", 1055: "6373", 1056: "44413", 1057: "19936", 1058: "7714", 1059: "2438", 1060: "12134", 1061: "13190", 1062: "1074", 1063: "66669", 1064: "42953", 1065: "30429", 1066: "30090", 1067: "6724", 1068: "2557", 1069: "7032", 1070: "3040"}, 9))
+      .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
+
+  var counties = svg.append("g")
+      .attr("class", "counties")
+    .selectAll("path")
+      .data(topojson.object(us, us.objects.counties).geometries)
+    .enter().append("path")
+      .attr("d", path);
+
+  d3.selectAll('input').on('change', function() {
+      setScale(this.id);
+  });
+
+  function setScale(s) {
+      counties.attr("class", function(d) { return scales[s](rateById[d.id]); })
+  }
+
+  setScale('jenks9');
+
+  svg.append("path")
+      .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a.id !== b.id; }))
+      .attr("class", "states")
+      .attr("d", path);
+}
+
+</script>
