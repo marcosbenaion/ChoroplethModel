@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+/* CSS goes here. */
+    
+body {
+  font:normal 14px sans-serif;
+}
+
+#form {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+input {
+  margin-right: 10px;
+}
+
+.states {
+  fill: none;
+  stroke: #fff;
+  stroke-linejoin: round;
+}
+
+path {
+  -webkit-transition: fill 200ms linear;
+}
+
+.q0-9 { fill:rgb(247,251,255); }
+.q1-9 { fill:rgb(222,235,247); }
+.q2-9 { fill:rgb(198,219,239); }
+.q3-9 { fill:rgb(158,202,225); }
+.q4-9 { fill:rgb(107,174,214); }
+.q5-9 { fill:rgb(66,146,198); }
+.q6-9 { fill:rgb(33,113,181); }
+.q7-9 { fill:rgb(8,81,156); }
+.q8-9 { fill:rgb(8,48,107); }
+
+</style>
+<body>
+    <div id='form'>
+  <input checked='true' type='radio' name='scale' id='jenks9' /><label for='jenks9'>jenks 9</label>
+  <input type='radio' name='scale' id='quantize' /><label for='quantize'>quantize</label>
+</div>
+<svg width="960" height="600"></svg>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script src="//d3js.org/topojson.v2.min.js"></script>
+    <script src="simple_statistics.js"></script>
+<script type="text/javascript" src="geostats.min.js"></script>
+<script>
+    
+var svg = d3.select("svg"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height");
+    
+var projection = d3.geoEquirectangular();
+    
+var scales = {};
+    
+scales.quantize = d3.scaleQuantize()
+    .domain([132, 94610])
+    .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
+    
+var populacaoRate = d3.map();
+    
+var path = d3.geoPath()
+    .projection(projection);
+
+var color = d3.scaleLinear()
+    .domain([0,3000,6000,100000])
+    .range(['#d9f0a3','#005a32','#fef0d9','#990000']);
+
+var g = svg.append("g")
+    .attr("class", "key")
+    .attr("transform", "translate(0,40)");
+    
+var array = {};
+    
+    projection
+      .scale(1)
+      .translate([0, 0]);
+
+d3.queue()
+    .defer(d3.json, "bairrosFinal.json")
+    .defer(d3.tsv, "populacaoRate.tsv")
+    .await(ready);
+
+function ready(error, bairros, populacao) {
+  if (error) throw error;
+    
+    populacao.forEach(function(d) { populacaoRate.set(d.id, +d.rate); });
+    
+    scales.jenks9 = d3.scaleThreshold()
+      .domain(ss.jenks(populacao.map(function(d) { return +d.rate; }), 9))
+      .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
+    
+    var feat = topojson.feature(bairros, bairros.objects.collection);
+    
+    var b = path.bounds(feat),
+      s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
+      t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
+    
+    projection
+      .scale(s)
+      .translate(t);
+    
+    var counties = svg.append("g")
+      .attr("class", "counties")
+    .selectAll("path")
+    .data(topojson.feature(bairros, bairros.objects.collection).features)
+    .enter().append("path")
+      .attr("d", path);
+    
+    d3.selectAll('input').on('change', function() {
+      setScale(this.id);
+  });
+    
+    function setScale(s) {
+      counties.attr("class", function(d) { 
+          return scales[s](d.rate = populacaoRate.get(d.properties.id)); })
+  }
+    
+    function setText(d){
+        counties.append("title")
+      .text(function(d) { return "Bairro " + d.properties.id + ". Populacao: " + (d.rate = populacaoRate.get(d.properties.id)) });
+    
+    }
+    
+    setText(populacaoRate);
+    
+    setScale('jenks9');
+
+  svg.append("path")
+      .datum(topojson.mesh(bairros, bairros.objects.collection, function(a, b) { 
+      var aRate = a.properties.id;
+      var bRate = b.properties.id;
+      return aRate !== bRate; }))
+      .attr("class", "states")
+      .attr("d", path);
+}
+
+</script>

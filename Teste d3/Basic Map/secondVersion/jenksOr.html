@@ -43,8 +43,7 @@ path {
   <input type='radio' name='scale' id='quantize' /><label for='quantize'>quantize</label>
 </div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
-<script type="text/javascript" src="simple_statistics.js"></script>
-<script type="text/javascript" src="geostats.min.js"></script>
+<script src="simple_statistics.js"></script>
 <script src="http://d3js.org/queue.v1.min.js"></script>
 <script src="http://d3js.org/topojson.v0.min.js"></script>
 <script>
@@ -71,11 +70,14 @@ queue()
 
 function ready(error, us, unemployment) {
   var rateById = {};
+    
+  console.log(us);
+  console.log(unemployment);
 
   unemployment.forEach(function(d) { rateById[d.id] = +d.rate; });
 
   scales.jenks9 = d3.scale.threshold()
-      .domain(ss.jenks({132, 283, 315, 515, 748, 776, 794, 851, 1074, 1098, 1159, 1170, 1519, 1588, 1827}, 9))
+      .domain(ss.jenks(unemployment.map(function(d) { return +d.rate; }), 9))
       .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
 
   var counties = svg.append("g")
@@ -90,7 +92,8 @@ function ready(error, us, unemployment) {
   });
 
   function setScale(s) {
-      counties.attr("class", function(d) { return scales[s](rateById[d.id]); })
+      counties.attr("class", function(d) { 
+          return scales[s](rateById[d.id]); })
   }
 
   setScale('jenks9');
