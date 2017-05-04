@@ -23,6 +23,13 @@ input {
   stroke: #fff;
   stroke-linejoin: round;
 }
+    
+.counties {
+  fill: none;
+  stroke: #fff;
+  stroke-linejoin: round;
+}
+
 
 path {
   -webkit-transition: fill 200ms linear;
@@ -43,6 +50,15 @@ path {
     <div id='form'>
   <input checked='true' type='radio' name='scale' id='jenks9' /><label for='jenks9'>jenks 9</label>
   <input type='radio' name='scale' id='quantize' /><label for='quantize'>quantize</label>
+  <button onclick="q0()">q0-9</button>
+  <button onclick="q1()">q1-9</button>
+  <button onclick="q2()">q2-9</button>
+  <button onclick="q3()">q3-9</button>
+  <button onclick="q4()">q4-9</button>
+  <button onclick="q5()">q5-9</button>
+  <button onclick="q6()">q6-9</button>
+  <button onclick="q7()">q7-9</button>
+  <button onclick="q8()">q8-9</button>
 </div>
 <svg width="960" height="600"></svg>
 <script src="https://d3js.org/d3.v4.min.js"></script>
@@ -122,6 +138,10 @@ function ready(error, bairros, populacao) {
       counties.attr("class", function(d) { 
           return scales[s](d.rate = populacaoRate.get(d.properties.id)); })
   }
+    
+    function removeFilter(d){
+        console.log(d);
+    }
     
     function setText(d){
         counties.append("title")

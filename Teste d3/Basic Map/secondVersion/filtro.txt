@@ -1,0 +1,7 @@
+function setScale(s) {
+      counties.attr("class", function(d) { 
+          if ((scales[s](d.rate = populacaoRate.get(d.properties.id))) != "q5-9"){
+              return "vazio";
+          } else
+          return scales[s](d.rate = populacaoRate.get(d.properties.id)); })
+  }
