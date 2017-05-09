@@ -29,6 +29,10 @@ input {
   stroke: #fff;
   stroke-linejoin: round;
 }
+    
+    .semCor {
+        fill: rgb(102, 103, 104);
+    }
 
 
 path {
@@ -44,26 +48,55 @@ path {
 .q6-9 { fill:rgb(33,113,181); }
 .q7-9 { fill:rgb(8,81,156); }
 .q8-9 { fill:rgb(8,48,107); }
+    
+.button rect {
+  stroke: #999faa; /* navy 40% */
+  stroke-width: 2px;
+}
+
+.button rect.pressed {
+  fill: #45a024; /* navy 100% */
+}
+
+.button #gradient-start {
+  stop-color: #af2821; /* navy 40% */
+  stop-opacity: 1;
+}
+
+.button #gradient-stop {
+  stop-color: #c44b23; /* navy 70% */
+  stop-opacity: 1;
+}
+
+.button #gradient-start.active, .button #gradient-start.pressed {
+  stop-color: #4d576b; /* navy 70% */
+}
+
+.button #gradient-stop.active, .button #gradient-stop.pressed {
+  stop-color: #000f2b; /* navy 100% */
+}
+
+.button text {
+  font-size: 15px;
+  fill: #eee;
+  pointer-events: none;
+  text-anchor: middle;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
 
 </style>
 <body>
     <div id='form'>
   <input checked='true' type='radio' name='scale' id='jenks9' /><label for='jenks9'>jenks 9</label>
   <input type='radio' name='scale' id='quantize' /><label for='quantize'>quantize</label>
-  <button onclick="q0()">q0-9</button>
-  <button onclick="q1()">q1-9</button>
-  <button onclick="q2()">q2-9</button>
-  <button onclick="q3()">q3-9</button>
-  <button onclick="q4()">q4-9</button>
-  <button onclick="q5()">q5-9</button>
-  <button onclick="q6()">q6-9</button>
-  <button onclick="q7()">q7-9</button>
-  <button onclick="q8()">q8-9</button>
 </div>
 <svg width="960" height="600"></svg>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 <script src="//d3js.org/topojson.v2.min.js"></script>
+<script src="d3button.js"></script>
     <script src="simple_statistics.js"></script>
 <script type="text/javascript" src="geostats.min.js"></script>
 <script>
@@ -71,6 +104,20 @@ path {
 var svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
+    
+var espacamentoTopo = 50;
+var espacamentoEsquerda = 50;
+var espacamentoBotoes = 50;
+    
+var dataButton = [{label: "q0-9",     x: espacamentoEsquerda, y: espacamentoTopo },
+                 {label: "q1-9", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 1},
+                 {label: "q2-9", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 2},
+                 {label: "q3-9", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 3},
+                 {label: "q4-9", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 4},
+                 {label: "q5-9", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 5},
+                 {label: "q6-9", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 6},
+                 {label: "q7-9", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 7},
+                 {label: "q8-9", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 8}];
     
 var projection = d3.geoEquirectangular();
     
@@ -109,6 +156,11 @@ function ready(error, bairros, populacao) {
     
     populacao.forEach(function(d) { populacaoRate.set(d.id, +d.rate); });
     
+    populacao.forEach(function(d) { array[d.id] = {id: d.id, filtro: 1};});
+    
+    array[1026].filtro = 0;
+    console.log(array[1026]);
+    
     scales.jenks9 = d3.scaleThreshold()
       .domain(ss.jenks(populacao.map(function(d) { return +d.rate; }), 9))
       .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
@@ -136,16 +188,28 @@ function ready(error, bairros, populacao) {
     
     function setScale(s) {
       counties.attr("class", function(d) { 
-          return scales[s](d.rate = populacaoRate.get(d.properties.id)); })
+          if (array[d.properties.id].filtro == 1)
+              {
+                  return scales[s](d.rate = populacaoRate.get(d.properties.id));
+              }
+          return "semCor"; })
   }
     
-    function removeFilter(d){
-        console.log(d);
-    }
+    var button = d3.button()
+    .on('press', function(d, i) { console.log("Pressed", d, i, this.parentNode);})
+    .on('release', function(d, i) { console.log("Released", d, i, this.parentNode)});
+    
+// Add buttons
+var buttons = svg.selectAll('.button')
+    .data(dataButton)
+  .enter()
+    .append('g')
+    .attr('class', 'button')
+    .call(button);
     
     function setText(d){
         counties.append("title")
-      .text(function(d) { return "Bairro " + d.properties.nome + ". Populacao: " + (d.rate = populacaoRate.get(d.properties.id)) });
+      .text(function(d) { return "ID: " + d.properties.id + ". Bairro " + d.properties.nome + ". Populacao: " + (d.rate = populacaoRate.get(d.properties.id)) });
     
     }
     
@@ -161,5 +225,7 @@ function ready(error, bairros, populacao) {
       .attr("class", "states")
       .attr("d", path);
 }
+    
+    
 
 </script>
