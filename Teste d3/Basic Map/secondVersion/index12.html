@@ -136,7 +136,7 @@ var array = {};
 
 d3.queue()
     .defer(d3.json, "bairrosFinal.json")
-    .defer(d3.tsv, "populacaoRate.tsv")
+    .defer(d3.tsv, "populacaoRate2.tsv")
     .await(ready);
 
 function ready(error, bairros, populacao) {
@@ -148,7 +148,7 @@ function ready(error, bairros, populacao) {
     
     scales.jenks9 = d3.scaleThreshold()
       .domain(ss.jenks(populacao.map(function(d) { return +d.rate; }), 9))
-      .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
+      .range(d3.range(5).map(function(i) { return "q" + i + "-9"; }));
     
     var feat = topojson.feature(bairros, bairros.objects.collection);
     
@@ -186,6 +186,7 @@ function ready(error, bairros, populacao) {
                                         var labelBotao = d.label;
                                         var scaleClass = array[j].scaleClass;
                                     if ((scaleClass) == (labelBotao)){
+                                        console.log("Test");
                                         array[j].filtro = 0;
                                     }
                                   }
