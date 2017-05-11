@@ -88,10 +88,6 @@ path {
 
 </style>
 <body>
-    <div id='form'>
-  <input checked='true' type='radio' name='scale' id='jenks9' /><label for='jenks9'>jenks 9</label>
-  <input type='radio' name='scale' id='quantize' /><label for='quantize'>quantize</label>
-</div>
 <svg width="960" height="600"></svg>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
@@ -123,18 +119,10 @@ var projection = d3.geoEquirectangular();
     
 var scales = {};
     
-scales.quantize = d3.scaleQuantize()
-    .domain([132, 94610])
-    .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
-    
 var populacaoRate = d3.map();
     
 var path = d3.geoPath()
     .projection(projection);
-
-var color = d3.scaleLinear()
-    .domain([0,3000,6000,100000])
-    .range(['#d9f0a3','#005a32','#fef0d9','#990000']);
 
 var g = svg.append("g")
     .attr("class", "key")
