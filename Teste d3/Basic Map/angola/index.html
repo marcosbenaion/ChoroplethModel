@@ -19,21 +19,19 @@ input {
 }
 
 .states {
-  fill: black;
-  stroke: #fff;
+  fill: none;
+  stroke: #ff3636;
+  stroke-width: 2px;
   stroke-linejoin: round;
 }
     
 .counties {
-  fill: black;
-  stroke: #fff;
-  stroke-linejoin: round;
+  fill: none;
 }
     
-    .semCor {
-        fill: rgb(102, 103, 104);
-    }
-
+.semCor {
+  fill: rgb(102, 103, 104);
+}
 
 path {
   -webkit-transition: fill 200ms linear;
@@ -135,7 +133,7 @@ var array = {};
       .translate([0, 0]);
 
 d3.queue()
-    .defer(d3.json, "angolaMunicipios.json")
+    .defer(d3.json, "angolaMunicipios1.json")
     .defer(d3.tsv, "populacaoAngolaRate.tsv")
     .await(ready);
 
@@ -173,35 +171,38 @@ function ready(error, angola, populacao) {
     
     function setScale(s) {
       counties.attr("class", function(d) { 
-          var aidi = d.properties.id;
-          if (array[aidi].filtro == 1)
+          var countyId = d.properties.id;
+          if (array[countyId].filtro == 1)
               {
-                  array[aidi].scaleClass = scales[s](d.rate = populacaoRate.get(aidi));
-                  return scales[s](d.rate = populacaoRate.get(aidi));
+                  array[countyId].scaleClass = scales[s](d.rate = populacaoRate.get(countyId));
+                  return scales[s](d.rate = populacaoRate.get(countyId));
               }
           return "semCor"; })
   }
     
     var button = d3.button()
-    .on('press', function(d, i) { for (var j = 422606; j < 1802550; j++){
-                                        var labelBotao = d.label;
-                                        var scaleClass = array[j].scaleClass;
-                                    if ((scaleClass) == (labelBotao)){
-                                        console.log("Test");
-                                        array[j].filtro = 0;
-                                    }
-                                  }
+    .on('press', function(d, i) { populacao.forEach (mute.bind(null, d));
                                  setScale('jenks9');
                                  console.log("Pressed", d, i, this.parentNode);})
-    .on('release', function(d, i) { for (var j = 422606; j < 1802550; j++){
-                                        var labelBotao = d.label;
-                                        var scaleClass = array[j].scaleClass;
-                                    if ((scaleClass) == (labelBotao)){
-                                        array[j].filtro = 1;
-                                    }
-                                  }
-                                 setScale('jenks9');
-                                   console.log("Released", d, i, this.parentNode)});
+    .on('release', function(d, i) { populacao.forEach (unmute.bind(null, d));
+                                    setScale('jenks9');
+                                    console.log("Released", d, i, this.parentNode)});
+    
+    function mute(botao, index){
+        var labelBotao = botao.label;
+        var scaleClass = array[index.id].scaleClass;
+        if ((scaleClass) == (labelBotao)){
+            array[index.id].filtro = 0;
+        }
+    }
+    
+    function unmute(botao, index){
+        var labelBotao = botao.label;
+        var scaleClass = array[index.id].scaleClass;
+        if ((scaleClass) == (labelBotao)){
+            array[index.id].filtro = 1;
+        }
+    }
     
 // Add buttons
 var buttons = svg.selectAll('.button')
@@ -213,13 +214,18 @@ var buttons = svg.selectAll('.button')
     
     function setText(d){
         counties.append("title")
-      .text(function(d) { return "ID: " + d.properties.id + ". Provincia " + d.properties.adm2 + ". Populacao: " + (d.rate = populacaoRate.get(d.properties.id)) });
+      .text(function(d) { return "ID: " + d.properties.id + ". Estado: " + d.properties.adm1 + ". Municipio: " + d.properties.adm2 + ".  Populacao: " + (d.rate = populacaoRate.get(d.properties.id)) });
     
     }
     
     setText(populacaoRate);
     
     setScale('jenks9');
+    
+    svg.append("path")
+      .datum(topojson.mesh(angola, angola.objects.collection, function(a, b) { return a.properties.adm1 !== b.properties.adm1; }))
+      .attr("class", "states")
+      .attr("d", path);
 }
     
     

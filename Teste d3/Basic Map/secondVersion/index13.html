@@ -135,22 +135,22 @@ var array = {};
       .translate([0, 0]);
 
 d3.queue()
-    .defer(d3.json, "bairrosFinal.json")
-    .defer(d3.tsv, "populacaoRate.tsv")
+    .defer(d3.json, "bairrosBelem.json")
+    .defer(d3.tsv, "bairrosBelem1.tsv")
     .await(ready);
 
 function ready(error, bairros, populacao) {
   if (error) throw error;
     
-    populacao.forEach(function(d) { populacaoRate.set(d.id, +d.rate); });
+    populacao.forEach(function(d) { populacaoRate.set(d.ID, +d.POPULACAO_TOTAL); });
     
-    populacao.forEach(function(d) { array[d.id] = {id: d.id, filtro: 1, scaleClass: ""};});
+    populacao.forEach(function(d) { array[d.ID] = {id: d.ID, filtro: 1, scaleClass: ""};});
     
     scales.jenks9 = d3.scaleThreshold()
-      .domain(ss.jenks(populacao.map(function(d) { return +d.rate; }), 9))
+      .domain(ss.jenks(populacao.map(function(d) { return +d.POPULACAO_TOTAL; }), 9))
       .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
     
-    var feat = topojson.feature(bairros, bairros.objects.collection);
+    var feat = topojson.feature(bairros, bairros.objects.bairrosBelem);
     
     var b = path.bounds(feat),
       s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
@@ -163,7 +163,7 @@ function ready(error, bairros, populacao) {
     var counties = svg.append("g")
       .attr("class", "counties")
     .selectAll("path")
-    .data(topojson.feature(bairros, bairros.objects.collection).features)
+    .data(topojson.feature(bairros, bairros.objects.bairrosBelem).features)
     .enter().append("path")
       .attr("d", path);
     
@@ -173,10 +173,11 @@ function ready(error, bairros, populacao) {
     
     function setScale(s) {
       counties.attr("class", function(d) { 
+          console.log("ID: " + d.properties.id + ". Rate: " + populacaoRate.get(d.properties.id));
           if (array[d.properties.id].filtro == 1)
               {
-                  array[d.properties.id].scaleClass = scales[s](d.rate = populacaoRate.get(d.properties.id));
-                  return scales[s](d.rate = populacaoRate.get(d.properties.id));
+                  array[d.properties.id].scaleClass = scales[s](d.POPULACAO_TOTAL = populacaoRate.get(d.properties.id));
+                  return scales[s](d.POPULACAO_TOTAL = populacaoRate.get(d.properties.id));
               }
           return "semCor"; })
   }
@@ -191,17 +192,17 @@ function ready(error, bairros, populacao) {
     
     function mute(botao, index){
         var labelBotao = botao.label;
-        var scaleClass = array[index.id].scaleClass;
+        var scaleClass = array[index.ID].scaleClass;
         if ((scaleClass) == (labelBotao)){
-            array[index.id].filtro = 0;
+            array[index.ID].filtro = 0;
         }
     }
     
     function unmute(botao, index){
         var labelBotao = botao.label;
-        var scaleClass = array[index.id].scaleClass;
+        var scaleClass = array[index.ID].scaleClass;
         if ((scaleClass) == (labelBotao)){
-            array[index.id].filtro = 1;
+            array[index.ID].filtro = 1;
         }
     }
     
