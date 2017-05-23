@@ -1,0 +1,192 @@
+id	provincia	municipio	rate
+1	Cuando_Cubando	Rivundo	30365
+2	Cunene	Namacunde	143739
+3	Moxico	Alto_Zambeze	100476
+4	Moxico	Luacano	21447
+5	Moxico	Cameia	27644
+6	Moxico	Leua	30747
+7	Moxico	Camanongue	32587
+8	Lunda_Sul	Dala	26753
+9	Lunda_Sul	Muconda	35252
+10	Moxico	Luau	84477
+			
+12	Moxico	Luchazes	13649
+13	Bie	Camacupa	141760
+14	Bie	Cuemba	50978
+15	Lunda_Sul	Cacolo	30524
+16	Cuando_Cubango	Cuito_Cuanavale	38836
+			
+			
+19	Bie	Chitembo	68581
+20	Cuando_Cubango	Menongue	306622
+21	Bie	Cuito	424169
+22	Bie	Catabola	118285
+23	Bie	N'harea	113651
+24	Malanje	Luquembo	51647
+25	Malanje	Quirima	22250
+26	Malanje	Cambundi-Catembo	44219
+27	Lunda_Norte	Capenda_Camulemba	53767
+28	Lunda_Norte	Lubalo	18301
+29	Cuando_Cubango	Cuchi	42899
+30	Huila	Cuvango	75805
+31	Huambo	Catchiungo	115622
+32	Bie	Chinguar	117470
+33	Bie	Cunhinga	69238
+34	Bie	Andulo	234791
+35	Cuanza_Sul	Mussende	76284
+36	Malanje	Cangandala	43855
+37	Malanje	Mucari	29037
+38	Malanje	Quela	21847
+39	Lunda_Norte	Xa-Muteba	52442
+40	Lunda_Norte	Cuilo	19720
+41	Lunda_Norte	Lucapa	146719
+42	Lunda_Norte	Cambulo	112875
+43	Uige	Bembe	32139
+44	Uige	Damba	63580
+45	Uige	Songo	62362
+46	Uige	Ambuila	16654
+47	Zaire	Nzeto	44440
+48	Zaire	Tomboco	43303
+49	Zaire	Mbanza_Congo	173850
+50	Uige	Maquela_do_zombo	122320
+51	Uige	Buengas	58353
+52	Uige	Sanza_Pombo	64022
+53	Uige	Bungo	39030
+54	Uige	Mucaba	41008
+55	Uige	Uige	493529
+56	Uige	Quitexe	32818
+57	Bengo	Nambuangongo	61024
+58	Bengo	Ambriz	21806
+59	Zaire	Soyo	218193
+60	Zaire	Noqui	22826
+61	Uige	Quimbele	129396
+62	Uige	Milunga	48158
+63	Uige	Cangola	52004
+64	Uige	Puri	35492
+65	Uige	Negage	135489
+66	Cuanza_Norte	Ambaca	60835
+67	Cuanza_Norte	Bolongongo	12635
+68	Bengo	Bula-Atumba	16047
+69	Bengo	Dembos-Quibaxe	28202
+70	Bengo	Dande	217929
+71	Malanje	Calandula	87017
+			
+			
+			
+			
+			
+77	Cuanza_Norte	Samba_Caju	23886
+78	Cuanza_Norte	Quiculungo	10060
+79	Cuanza_Norte	Banga	9493
+80	Cuanza_Norte	Ngonguembo	6865
+81	Bengo	Pango-Aluquem	6571
+82	Luanda	Icolo_e_Bengo	74644
+83	Luanda	Cacuaco	882398
+			
+85	Cuanza_Norte	Golungo_Alto	29259
+86	Cuanza_Norte	Cambambe	88951
+87	Luanda	Quissama	25086
+88	Luanda	Belas	1065106
+			
+			
+91	Luanda	Luanda	2107648
+			
+93	Malanje	Cahombo	22115
+94	Malanje	Kiuaba-N'zoji	14402
+95	Malanje	Malanje	486870
+96	Malanje	Cacuso	71541
+97	Cuanza_Norte	Lucala	20148
+98	Malanje	Cunda-dia-Baze	13651
+99	Cuanza_Sul	Libolo	85106
+100	Cuanza_Norte	Cazengo	165839
+			
+102	Cuanza_Sul	Quibala	135898
+103	Cuanza_Sul	Quilenda	92364
+104	Cuanza_Sul	Porto_Amboim	119742
+			
+			
+107	Cuanza_Sul	Cela	218505
+108	Cuanza_Sul	Ebo	158051
+109	Cuanza_Sul	Amboim	234894
+			
+			
+112	Cuanza_Sul	Sumbe	267693
+			
+114	Lunda_Norte	Chitato	195665
+115	Huambo	Mungo	110429
+116	Huambo	Bailundo	282150
+117	Cuanza_Sul	Cassongue	140587
+118	Cuanza_Sul	Seles	174981
+119	Cuanza_Sul	Conda	89682
+120	Benguela	Bocoio	154446
+121	Benguela	Lobito	324050
+122	Huambo	Tchikala_Tcholohanga	101914
+123	Huambo	Huambo	665574
+124	Huambo	Londuinbale	124448
+125	Benguela	Balombo	99321
+126	Benguela	Ganda	224668
+127	Benguela	Cubal	287931
+128	Benguela	Benguela	513441
+129	Huila	Chipindo	61385
+130	Huambo	Caala	259483
+131	Huambo	Ecunha	78848
+132	Huambo	Ukuma	42687
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+144	Huila	Jamba	100910
+145	Huila	Chicomba	127273
+146	Huila	Caconda	159908
+147	Huambo	Longonjo	86795
+148	Huambo	Tchinjenje	28197
+149	Huila	Caluquembe	169420
+150	Benguela	Chongoroi	81476
+151	Benguela	Caimbambo	80715
+152	Benguela	Baia_Farta	102989
+153	Huila	Matala	243938
+154	Huila	Quipungo	146914
+155	Huila	Lubango	731575
+156	Huila	Quilengues	68682
+157	Namibe	Camucuio	49310
+158	Namibe	Namibe	282056
+159	Cunene	Cahama	69094
+160	Huila	Gambos	75988
+161	Huila	Chibia	181431
+162	Huila	Humpata	82758
+163	Namibe	Bibala	55399
+164	Namibe	Virei	29975
+			
+			
+			
+			
+			
+170	Cabinda	Belize	19454
+171	Cabinda	Cacongo	36778
+172	Cabinda	Buco_Zau	33843
+173	Cabinda	Cabinda	598210
+174	Zaire	Cuimba	64613
+175	Lunda_Norte	Cuango	173362
+176	Malanje	Marimba	27074
+177	Malanje	Massango	32610
+178	Lunda_Norte	Caungula	27099
+179	Namibe	Tombwa	54873
+180	Cunene	Cuvelai	60137
+181	Cunene	Curoca	41750
+182	Cunene	Ombadja	290077
+183	Cuando_Cubango	Cuangar	27335
+184	Cunene	Cuanhama	360491
+185	Cuando_Cubango	Nancova	3451
+186	Cuando_Cubango	Dirico	14601
+187	Moxico	Luena	350803
+188	Lunda_Sul	Saurimo	423548
+189	Cuando_Cubango	Calai	20239
+190	Moxico	Bundas-Lumbala-Nguimbo	65764
+191	Cuando_Cubango	Mavinga	26021

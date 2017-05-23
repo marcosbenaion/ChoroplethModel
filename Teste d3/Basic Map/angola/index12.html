@@ -142,6 +142,8 @@ d3.queue()
 function ready(error, bairros, populacao) {
   if (error) throw error;
     
+    console.log(bairros);
+    
     populacao.forEach(function(d) { populacaoRate.set(d.id, +d.rate); });
     
     populacao.forEach(function(d) { array[d.id] = {id: d.id, filtro: 1, scaleClass: ""};});
@@ -155,6 +157,8 @@ function ready(error, bairros, populacao) {
     var b = path.bounds(feat),
       s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
       t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
+    
+    console.log(b);
     
     projection
       .scale(s)
@@ -182,14 +186,7 @@ function ready(error, bairros, populacao) {
   }
     
     var button = d3.button()
-    .on('press', function(d, i) { for (var j = 1000; j < 1071; j++){
-                                        var labelBotao = d.label;
-                                        var scaleClass = array[j].scaleClass;
-                                    if ((scaleClass) == (labelBotao)){
-                                        console.log("Test");
-                                        array[j].filtro = 0;
-                                    }
-                                  }
+    .on('press', function(d, i) { populacao.forEach (mute);
                                  setScale('jenks9');
                                  console.log("Pressed", d, i, this.parentNode);})
     .on('release', function(d, i) { for (var j = 1000; j < 1071; j++){
@@ -201,6 +198,16 @@ function ready(error, bairros, populacao) {
                                   }
                                  setScale('jenks9');
                                    console.log("Released", d, i, this.parentNode)});
+    
+    function mute(index){
+        console.log(index);
+        var labelBotao = d.label;
+        var scaleClass = array[index.id].scaleClass;
+        if ((scaleClass) == (labelBotao)){
+            console.log("Test");
+            array[index.id].filtro = 0;
+        }
+    }
     
 // Add buttons
 var buttons = svg.selectAll('.button')
@@ -219,14 +226,6 @@ var buttons = svg.selectAll('.button')
     setText(populacaoRate);
     
     setScale('jenks9');
-
-  svg.append("path")
-      .datum(topojson.mesh(bairros, bairros.objects.collection, function(a, b) { 
-      var aRate = a.properties.id;
-      var bRate = b.properties.id;
-      return aRate !== bRate; }))
-      .attr("class", "states")
-      .attr("d", path);
 }
     
     
