@@ -49,6 +49,11 @@ d3.queue()
 
 var neighborhood;
 
+var textureD3 = textures.lines()
+  .thicker();
+
+svg.call(textureD3);
+
 // Function to manipulate the data in the map
 function ready(error, mapObject, dataObject) {
     // mapObject = .json file - map
@@ -91,8 +96,10 @@ function ready(error, mapObject, dataObject) {
       .scale(s)
       .translate(t);
     
+    console.log(textureD3.url());
+    
     neighborhood = svg.append("g")
-      .attr("class", "neighborhood")
+        .attr("class", "neighborhood")
     .selectAll("path")
     .data(topojson.feature(mapObject, mapObject.objects.bairrosBelem).features)
     .enter().append("path")
@@ -116,6 +123,7 @@ var buttons = svg.selectAll('.button')
   .enter()
     .append('g')
     .attr('class', 'button')
+    .style("fill", textureD3.url())
     .call(button);
     
     setText(data4Search);

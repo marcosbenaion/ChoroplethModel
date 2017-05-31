@@ -26,13 +26,19 @@
         
         <!-- TO DO - Viewport? -->
         
-        <!-- Cascade Style Sheet -->
-        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <style>
+        
+            #example {
+                margin-bottom: 1em;
+            }
+            
+        </style>
+
     </head>
 
     <body>
-            <!-- Map element SVG -->
-            <svg width="960" height="600"></svg>
+        
+        <div id="example"></div>
 
     </body>
     
@@ -42,9 +48,17 @@
 
 <!-- Required files/Extensions -->
 <script src="https://d3js.org/d3.v4.min.js"></script>                        <!-- D3.js -->
-<script src="//d3js.org/topojson.v2.min.js"></script>                        <!-- Library to read TopoJSON files -->
-<script src="/js/extensions/d3button.js"></script>                           <!-- Add and style the buttons -->
-<script src="/js/extensions/simple_statistics.js"></script>                  <!-- Library to use Jenks Natural Break classification algorithm -->
 <script type="text/javascript" src="/js/extensions/textures.js"></script> <!-- Library to add Textures on the map -->
-<!-- Main file to use/bind/manipulate the data/methods and show the map -->
-<script type="text/javascript" src="/js/main.js"></script>
+<script>
+    var svg = d3.select("#example")
+  .append("svg");
+
+var t = textures.lines()
+  .thicker();
+
+svg.call(t);
+
+svg.append("circle")
+  .style("fill", t.url());
+    
+</script>
