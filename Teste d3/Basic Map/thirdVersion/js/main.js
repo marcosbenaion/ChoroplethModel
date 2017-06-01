@@ -117,19 +117,20 @@ function ready(error, mapObject, dataObject) {
                                     setScale('jenks9');
                                     console.log("Released", d, i, this.parentNode)});
     
-// Add buttons
-var buttons = svg.selectAll('.button')
-    .data(dataButton)
-  .enter()
-    .append('g')
-    .attr('class', 'button')
-    .style("fill", textureD3.url())
-    .call(button);
-    
-    setText(data4Search);
-    
-    setScale('jenks9');
+    // Add buttons
+    var buttons = svg.selectAll('.button')
+        .data(dataButton)
+      .enter()
+        .append('g')
+        .attr('class', 'button')
+        .call(button);
+
+        setText(data4Search);
+
+        setScale('jenks9');
 }
+
+// Auxiliary Functions
 
 function mute(botao, index){
         var labelBotao = botao.label;
@@ -148,14 +149,15 @@ function mute(botao, index){
     }
 
 function setScale(s) {
-        console.log(s);
-      neighborhood.attr("class", function(d) { 
+    console.log(s);
+    neighborhood.attr("class", function(d) { 
           if (filterArray[d.properties.id].filtro == 1)
               {
                   filterArray[d.properties.id].scaleClass = scales[s](d.POPULACAO_TOTAL = data4Search.get(d.properties.id));
                   return scales[s](d.POPULACAO_TOTAL = data4Search.get(d.properties.id));
               }
           return "excludeView"; })
+      //neighborhood.style("fill", textureD3.url); -- example
   }
 
 function setText(d){

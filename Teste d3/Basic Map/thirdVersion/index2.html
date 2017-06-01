@@ -47,7 +47,7 @@
 <!-- Runs the associated Javascript file -->
 
 <!-- Required files/Extensions -->
-<script src="https://d3js.org/d3.v4.min.js"></script>                        <!-- D3.js -->
+<script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>                        <!-- D3.js -->
 <script type="text/javascript" src="/js/extensions/textures.js"></script> <!-- Library to add Textures on the map -->
 <script>
     var svg = d3.select("#example")
@@ -59,6 +59,9 @@ var t = textures.lines()
 svg.call(t);
 
 svg.append("circle")
+.attr("cx", 30)
+.attr("cy", 30)
+.attr("r", 15)
   .style("fill", t.url());
     
 </script>
