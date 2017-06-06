@@ -32,8 +32,10 @@
 
     <body>
             <!-- Map element SVG -->
-            <svg width="960" height="600"></svg>
-
+            <svg id="mapSVG" width="600" height="500"></svg>
+            
+            <!-- Bar Chart -->
+            <svg id="barSVG" width="600" height="550"></svg>
     </body>
     
 </html>
@@ -46,5 +48,7 @@
 <script src="/js/extensions/d3button.js"></script>                           <!-- Add and style the buttons -->
 <script src="/js/extensions/simple_statistics.js"></script>                  <!-- Library to use Jenks Natural Break classification algorithm -->
 <script type="text/javascript" src="/js/extensions/textures.js"></script>    <!-- Library to add Textures on the map -->
-<!-- Main file to use/bind/manipulate the data/methods and show the map -->
-<script type="text/javascript" src="/js/main.js"></script>
+
+<!-- Main files to use/bind/manipulate the data/methods and show the visualizations -->
+<script type="text/javascript" src="/js/barChartJavascript.js"></script>     <!-- Javascript file for the Bar Chart -->
+<script type="text/javascript" src="/js/mapJavascript.js"></script>          <!-- Javascript file for the Map -->

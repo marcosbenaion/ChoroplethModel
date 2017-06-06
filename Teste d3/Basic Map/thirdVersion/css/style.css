@@ -41,6 +41,19 @@ path {
 .q7-9 { fill:rgb(8,81,156); }
 .q8-9 { fill:rgb(8,48,107); }*/
 
+/* Styling for the Bar Chart */
+.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: brown;
+}
+
+.axis--x path {
+  display: none;
+}
+
 /* Styling for buttons */
 .button rect {
     stroke: #999faa; /* navy 40% */
