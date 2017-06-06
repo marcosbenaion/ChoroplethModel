@@ -10,21 +10,22 @@ var espacamentoBotoes = 50;
 
 // Create the buttons for turning on/off filters
 var dataButton = 
-    [{label: "q0-9", x: espacamentoEsquerda, y: espacamentoTopo },
-    {label: "q1-9", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 1},
-    {label: "q2-9", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 2},
-    {label: "q3-9", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 3},
-    {label: "q4-9", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 4},
-    {label: "q5-9", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 5},
-    {label: "q6-9", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 6},
-    {label: "q7-9", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 7},
-    {label: "q8-9", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 8}];
+    [{label: "0", x: espacamentoEsquerda, y: espacamentoTopo },
+    {label: "1", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 1},
+    {label: "2", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 2},
+    {label: "3", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 3},
+    {label: "4", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 4},
+    {label: "5", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 5},
+    {label: "6", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 6},
+    {label: "7", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 7},
+    {label: "8", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 8}];
 
 // Define projection to use on the map - d3 Projections
 var projection = d3.geoEquirectangular();
 
-// Variable object used to search with get
-var data4Search= d3.map();
+// Variable objects used to store the attributes
+var attributeOneDataArray= d3.map();
+var attributeTwoDataArray= d3.map();
 
 // Variable scales store the different scales created
 var scales = {};
@@ -44,47 +45,120 @@ projection
 // Queue load the map and data
 d3.queue()
     .defer(d3.json, "map/bairrosBelem.json")
-    .defer(d3.tsv, "data/bairrosBelem.tsv")
+    .defer(d3.tsv, "data/populacaoBelem.tsv")
+    .defer(d3.tsv, "data/areaBelem.tsv")
     .await(ready);
+
+// Load Textures
+var textureQ09 = textures.lines()
+    .lighter();
+
+var textureQ19 = textures.lines()
+    .size(2)
+    .strokeWidth(1);
+
+var textureQ29 = textures.lines()
+    .size(3)
+    .strokeWidth(1);
+
+var textureQ39 = textures.lines()
+    .size(5)
+    .strokeWidth(1);
+
+var textureQ49 = textures.lines()
+    .size(8)
+    .strokeWidth(2);
+
+var textureQ59 = textures.lines()
+    .size(10)
+    .strokeWidth(2);
+
+var textureQ69 = textures.lines()
+    .size(12)
+    .strokeWidth(2);
+
+var textureQ79 = textures.lines()
+    .orientation("vertical")
+    .heavier(10)
+    .thinner(1.5)
+    .size(6)
+    .strokeWidth(2);
+
+var textureQ89 = textures.lines()
+    .orientation("vertical")
+    .heavier(10)
+    .thinner(1.5)
+    .size(6)
+    .strokeWidth(5);
+
+svg.call(textureQ09);
+svg.call(textureQ19);
+svg.call(textureQ29);
+svg.call(textureQ39);
+svg.call(textureQ49);
+svg.call(textureQ59);
+svg.call(textureQ69);
+svg.call(textureQ79);
+svg.call(textureQ89);
 
 var neighborhood;
 
-var textureD3 = textures.lines()
-  .thicker();
+//Load colors
 
-svg.call(textureD3);
+var colors = [{ colorMap: "rgb(247,251,255)",textureMap: textureQ09}, 
+              { colorMap: "rgb(222,235,247)",textureMap: textureQ19},
+              { colorMap: "rgb(198,219,239)",textureMap: textureQ29}, 
+              { colorMap: "rgb(158,202,225)",textureMap: textureQ39}, 
+              { colorMap: "rgb(107,174,214)",textureMap: textureQ49}, 
+              { colorMap: "rgb(66,146,198)",textureMap: textureQ59}, 
+              { colorMap: "rgb(33,113,181)",textureMap: textureQ69}, 
+              { colorMap: "rgb(8,81,156)",textureMap: textureQ79}, 
+              { colorMap: "rgb(8,48,107)",textureMap: textureQ89}
+             ];
 
 // Function to manipulate the data in the map
-function ready(error, mapObject, dataObject) {
+function ready(error, mapObject, attributeOne, attributeTwo) {
     // mapObject = .json file - map
     // populacao = .tsv file - data
     
     if (error) throw error;
     
-    // Assign to data4Search the data in the dataObject
-    dataObject.forEach(function(d) { 
-        data4Search.set(d.ID, +d.POPULACAO_TOTAL);
-        // Correspondent Row names of dataObject.tsv are used as 'd' property objects. Example:
+    // Assign to attributeOneDataArray the data in the attributeOne
+    attributeOne.forEach(function(d) { 
+        attributeOneDataArray.set(d.ID, +d.POPULACAO_TOTAL);
+        // Correspondent Row names of attributeOne.tsv are used as 'd' property objects. Example:
         // Rows: ID, POPULACAO_TOTAL, BAIRRO
         // Access: d.ID, d.POPULACAO_TOTAL, d.BAIRRO
     });
     
+    // Assign to attributeTwoDataArray the data in the attributeTwo
+    attributeTwo.forEach(function(d) {
+        attributeTwoDataArray.set(d.ID, +d.AREA);
+    });
+    
     // Create the filter array to store the filter state and scale class
-    dataObject.forEach(function(d) { 
-        filterArray[d.ID] = {id: d.ID, filtro: 1, scaleClass: ""};
-        // filterArray elements receive the same d.ID -- Correspondent Row, see above -- values of the dataObject
+    attributeOne.forEach(function(d) { 
+        filterArray[d.ID] = {id: d.ID, filtro1: 1, filtro2:1, scaleClass: ""};
+        // filterArray elements receive the same d.ID -- Correspondent Row, see above -- values of the attributeOne
         // Filter values starts at 1, meaning all data elements are included in the view
         // Scale class values will be set on the setScale function
     });
     
-    // Create the scale for a dataObject
-    scales.jenks9 = d3.scaleThreshold() // 'jenks9' is the scale name -- used in the setScale function
+    // Create the scale for the attributeOne
+    scales.populacao = d3.scaleThreshold() // 'jenks9' is the scale name -- used in the setScale function
       .domain(ss.jenks // Use Jenks Natural Breaks Classification Algorithm
-              (dataObject.map(function(d) { return +d.POPULACAO_TOTAL; }), 9)
+              (attributeOne.map(function(d) { return +d.POPULACAO_TOTAL; }), 9)
               // Scale created use the 'd' property values -- Correspondet Row, see above --
               // Values are assigned into one of the 'n' classes -- 9 in this case
              )
-      .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
+      .range(d3.range(9).map(function(i) { return i; }));
+    
+    // Create the scale for the attributeTwo
+    scales.area = d3.scaleThreshold()
+      .domain(ss.jenks
+              (attributeTwo.map(function(d) { return +d.AREA; }), 9)
+             )
+      .range(d3.range(9).map(function(i) { return i; }));
     
     var feat = topojson.feature(mapObject, mapObject.objects.bairrosBelem);
     
@@ -96,25 +170,23 @@ function ready(error, mapObject, dataObject) {
       .scale(s)
       .translate(t);
     
-    console.log(textureD3.url());
-    
     neighborhood = svg.append("g")
         .attr("class", "neighborhood")
     .selectAll("path")
     .data(topojson.feature(mapObject, mapObject.objects.bairrosBelem).features)
     .enter().append("path")
-      .attr("d", path);
+        .attr("d", path);
     
     d3.selectAll('input').on('change', function() {
       setScale(this.id);
   });
     
     var button = d3.button()
-    .on('press', function(d, i) { dataObject.forEach (mute.bind(null, d));
-                                 setScale('jenks9');
+    .on('press', function(d, i) { attributeOne.forEach (mute.bind(null, d));
+                                 setScale('populacao');
                                  console.log("Pressed", d, i, this.parentNode);})
-    .on('release', function(d, i) { dataObject.forEach (unmute.bind(null, d));
-                                    setScale('jenks9');
+    .on('release', function(d, i) { attributeOne.forEach (unmute.bind(null, d));
+                                    setScale('populacao');
                                     console.log("Released", d, i, this.parentNode)});
     
 // Add buttons
@@ -123,43 +195,68 @@ var buttons = svg.selectAll('.button')
   .enter()
     .append('g')
     .attr('class', 'button')
-    .style("fill", textureD3.url())
     .call(button);
     
-    setText(data4Search);
+    setText(attributeOneDataArray);
     
-    setScale('jenks9');
+    // Default Scale loaded
+    setScale('area');
 }
 
 function mute(botao, index){
-        var labelBotao = botao.label;
-        var scaleClass = filterArray[index.ID].scaleClass;
-        if ((scaleClass) == (labelBotao)){
-            filterArray[index.ID].filtro = 0;
-        }
+    var labelBotao = botao.label;
+    var scaleClass = filterArray[index.ID].scaleClass;
+    if ((scaleClass) == (labelBotao)){
+        filterArray[index.ID].filtro1 = 0;
     }
+}
     
     function unmute(botao, index){
         var labelBotao = botao.label;
         var scaleClass = filterArray[index.ID].scaleClass;
         if ((scaleClass) == (labelBotao)){
-            filterArray[index.ID].filtro = 1;
+            filterArray[index.ID].filtro1 = 1;
         }
     }
 
 function setScale(s) {
-        console.log(s);
-      neighborhood.attr("class", function(d) { 
-          if (filterArray[d.properties.id].filtro == 1)
+    // Scale for populacao
+    if (s == "populacao"){
+        neighborhood.style("fill", function(d) { 
+          if (filterArray[d.properties.id].filtro1 == 1)
               {
-                  filterArray[d.properties.id].scaleClass = scales[s](d.POPULACAO_TOTAL = data4Search.get(d.properties.id));
-                  return scales[s](d.POPULACAO_TOTAL = data4Search.get(d.properties.id));
+                  filterArray[d.properties.id].scaleClass = scales[s](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id));
+                  return colors[scales[s](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id))].colorMap;
               }
-          return "excludeView"; })
+          return "rgb(102, 103, 104)"; })
+    }
+    
+    // Scale for area
+      else if (s == "area"){
+          neighborhood.style("fill", function(d) { 
+          if (filterArray[d.properties.id].filtro2 == 1)
+              {
+                  // Textura -> Populacao / Cor -> Area
+                  filterArray[d.properties.id].scaleClass = scales[s](d.AREA = attributeTwoDataArray.get(d.properties.id));
+                  var cor = colors[scales[s](d.AREA = attributeTwoDataArray.get(d.properties.id))].colorMap;
+                  
+                  filterArray[d.properties.id].scaleClass = scales[s](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id));
+                  var textureTemp = colors[scales["populacao"](attributeOneDataArray.get(d.properties.id))].textureMap;
+                  textureTemp.background(cor);
+                  svg.call(textureTemp);
+                  return textureTemp.url();
+                                
+                  // Area
+                  /*filterArray[d.properties.id].scaleClass = scales[s](d.AREA = attributeTwoDataArray.get(d.properties.id));
+                  return colors[scales[s](d.AREA = attributeTwoDataArray.get(d.properties.id))].colorMap;*/
+              }
+          return "rgb(102, 103, 104)"; })
+      }
+    
   }
 
 function setText(d){
         neighborhood.append("title")
-      .text(function(d) { return "ID: " + d.properties.id + ". Bairro " + d.properties.nome + ". Populacao: " + (d.rate = data4Search.get(d.properties.id)) });
+      .text(function(d) { return "ID: " + d.properties.id + ". Bairro " + d.properties.nome + ". Populacao: " + (d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id)) + ". Area: " + (d.AREA = attributeTwoDataArray.get(d.properties.id)) });
     
     }

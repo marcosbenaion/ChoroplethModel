@@ -22,16 +22,16 @@ input {
 }
 
 /* Styling when not in the filter */
-.excludeView {
+/*.excludeView {
     fill: rgb(102, 103, 104);
-}
+}*/
 
 path {
     -webkit-transition: fill 200ms linear;
 }
 
 /* Styling for each class. 1 Class = 1 Color */
-.q0-9 { fill:rgb(247,251,255); }
+/*.q0-9 { fill:rgb(247,251,255); }
 .q1-9 { fill:rgb(222,235,247); }
 .q2-9 { fill:rgb(198,219,239); }
 .q3-9 { fill:rgb(158,202,225); }
@@ -39,7 +39,7 @@ path {
 .q5-9 { fill:rgb(66,146,198); }
 .q6-9 { fill:rgb(33,113,181); }
 .q7-9 { fill:rgb(8,81,156); }
-.q8-9 { fill:rgb(8,48,107); }
+.q8-9 { fill:rgb(8,48,107); }*/
 
 /* Styling for buttons */
 .button rect {
