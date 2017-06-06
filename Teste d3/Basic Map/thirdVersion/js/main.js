@@ -189,7 +189,6 @@ function ready(error, mapObject, attributeOne, attributeTwo) {
                                     setScale('populacao');
                                     console.log("Released", d, i, this.parentNode)});
     
-<<<<<<< HEAD
 // Add buttons
 var buttons = svg.selectAll('.button')
     .data(dataButton)
@@ -202,22 +201,7 @@ var buttons = svg.selectAll('.button')
     
     // Default Scale loaded
     setScale('area');
-=======
-    // Add buttons
-    var buttons = svg.selectAll('.button')
-        .data(dataButton)
-      .enter()
-        .append('g')
-        .attr('class', 'button')
-        .call(button);
-
-        setText(data4Search);
-
-        setScale('jenks9');
->>>>>>> origin/master
 }
-
-// Auxiliary Functions
 
 function mute(botao, index){
     var labelBotao = botao.label;
@@ -236,7 +220,6 @@ function mute(botao, index){
     }
 
 function setScale(s) {
-<<<<<<< HEAD
     // Scale for populacao
     if (s == "populacao"){
         neighborhood.style("fill", function(d) { 
@@ -252,11 +235,6 @@ function setScale(s) {
       else if (s == "area"){
           neighborhood.style("fill", function(d) { 
           if (filterArray[d.properties.id].filtro2 == 1)
-=======
-    console.log(s);
-    neighborhood.attr("class", function(d) { 
-          if (filterArray[d.properties.id].filtro == 1)
->>>>>>> origin/master
               {
                   // Textura -> Populacao / Cor -> Area
                   filterArray[d.properties.id].scaleClass = scales[s](d.AREA = attributeTwoDataArray.get(d.properties.id));
@@ -272,14 +250,9 @@ function setScale(s) {
                   /*filterArray[d.properties.id].scaleClass = scales[s](d.AREA = attributeTwoDataArray.get(d.properties.id));
                   return colors[scales[s](d.AREA = attributeTwoDataArray.get(d.properties.id))].colorMap;*/
               }
-<<<<<<< HEAD
           return "rgb(102, 103, 104)"; })
       }
     
-=======
-          return "excludeView"; })
-      //neighborhood.style("fill", textureD3.url); -- example
->>>>>>> origin/master
   }
 
 function setText(d){
