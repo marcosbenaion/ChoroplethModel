@@ -1,0 +1,31 @@
+1- textures.lines()
+	.lighter();
+
+2 - textures.lines();
+
+3 - textures.lines
+	.thicker();
+
+4 - textures.lines
+	.size(4)
+	.strokeWidth(1);
+
+5 - textures.lines
+	.size(8)
+	.strokeWidth(2);
+	
+
+6 - textures.lines()
+    .orientation("vertical")
+    .strokeWidth(1)
+    .shapeRendering("crispEdges");
+
+7 - textures.lines()
+	.thinner();
+
+8 - textures.lines()
+	.heavier();
+
+9 - textures.lines()
+	.heavier(10)
+	.thinner(1.5);
