@@ -253,6 +253,8 @@ function setScale(s) {
           return "rgb(102, 103, 104)"; })
       }
     
+    neighborhood.on("click", function(d){loadGraph(d.properties.nome)});
+    
   }
 
 function setText(d){
