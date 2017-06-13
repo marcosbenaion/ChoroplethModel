@@ -1,6 +1,19 @@
 /* Style sheet for Choropleth Map - TCC */
 /* Author: Marcos Senna Benaion Leals */
 
+.container{
+    display: flex;
+}
+
+.mapSVGdiv{
+    width: 600;
+    height: 500;
+}
+
+.chartSVGdiv{
+    flex-grow: 1;
+}
+
 body {
     font:normal 14px sans-serif;
 }
@@ -47,7 +60,7 @@ path {
 }
 
 .bar:hover {
-  fill: brown;
+  fill: #2dba38;
 }
 
 .axis--x path {
