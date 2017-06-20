@@ -23,6 +23,8 @@ var dataButton =
 // Define projection to use on the map - d3 Projections
 var projection = d3.geoEquirectangular();
 
+var aa =[-48.4931, -1.4698];
+
 // Variable objects used to store the attributes
 var attributeOneDataArray= d3.map();
 var attributeTwoDataArray= d3.map();
@@ -90,6 +92,8 @@ var textureQ89 = textures.lines()
     .thinner(1.5)
     .size(6)
     .strokeWidth(5);
+
+var testRect;
 
 svg.call(textureQ09);
 svg.call(textureQ19);
@@ -166,6 +170,15 @@ function ready(error, mapObject, attributeOne, attributeTwo) {
       s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
       t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
     
+    var curio = topojson.feature(mapObject, mapObject.objects.bairrosBelem.geometries[0]);
+    var b2 = path.bounds(curio);
+    
+    var centerBbox = [  (b2[1][0] - b2[0][0])/2 , (b2[1][1] - b2[0][1])/2  ];
+    
+    testRect = b2;
+    
+    console.log(centerBbox);
+    
     projection
       .scale(s)
       .translate(t);
@@ -177,16 +190,18 @@ function ready(error, mapObject, attributeOne, attributeTwo) {
     .enter().append("path")
         .attr("d", path);
     
+    console.log(d3.selectAll(".neighborhood"));
+    
     d3.selectAll('input').on('change', function() {
       setScale(this.id);
   });
     
     var button = d3.button()
     .on('press', function(d, i) { attributeOne.forEach (mute.bind(null, d));
-                                 setScale('populacao');
+                                 setScale('area');
                                  console.log("Pressed", d, i, this.parentNode);})
     .on('release', function(d, i) { attributeOne.forEach (unmute.bind(null, d));
-                                    setScale('populacao');
+                                    setScale('area');
                                     console.log("Released", d, i, this.parentNode)});
     
 // Add buttons
@@ -201,6 +216,7 @@ var buttons = svg.selectAll('.button')
     
     // Default Scale loaded
     setScale('area');
+    createDots();
 }
 
 function mute(botao, index){
@@ -253,7 +269,7 @@ function setScale(s) {
           return "rgb(102, 103, 104)"; })
       }
     
-    neighborhood.on("click", function(d){loadGraph(d.properties.nome); console.log(d);});
+    neighborhood.on("click", function(d){ loadGraph(d.properties.nome); console.log(d);});
     
   }
 
@@ -262,3 +278,14 @@ function setText(d){
       .text(function(d) { return "ID: " + d.properties.id + ". Bairro " + d.properties.nome + ". Populacao: " + (d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id)) + ". Area: " + (d.AREA = attributeTwoDataArray.get(d.properties.id)) });
     
     }
+
+function createDots(){
+    // add circles to svg
+    d3.select(".neighborhood").selectAll("circle")
+		.data([aa]).enter()
+		.append("circle")
+		.attr("cx", function (d) { console.log("Circulo: " + projection(d)); return projection(d)[0]; })
+		.attr("cy", function (d) { return projection(d)[1]; })
+		.attr("r", "8px")
+		.attr("fill", "red")
+}
