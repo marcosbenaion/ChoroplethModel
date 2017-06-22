@@ -24,6 +24,7 @@ var dataButton =
 var projection = d3.geoEquirectangular();
 
 var aa =[-48.4931, -1.4698];
+var center = [];
 
 // Variable objects used to store the attributes
 var attributeOneDataArray= d3.map();
@@ -127,6 +128,8 @@ function ready(error, mapObject, attributeOne, attributeTwo) {
     
     if (error) throw error;
     
+    console.log(mapObject);
+    
     // Assign to attributeOneDataArray the data in the attributeOne
     attributeOne.forEach(function(d) { 
         attributeOneDataArray.set(d.ID, +d.POPULACAO_TOTAL);
@@ -164,20 +167,11 @@ function ready(error, mapObject, attributeOne, attributeTwo) {
              )
       .range(d3.range(9).map(function(i) { return i; }));
     
-    var feat = topojson.feature(mapObject, mapObject.objects.bairrosBelem);
+    var feat = topojson.feature(mapObject, mapObject.objects.collection);
     
     var b = path.bounds(feat),
       s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
       t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
-    
-    var curio = topojson.feature(mapObject, mapObject.objects.bairrosBelem.geometries[0]);
-    var b2 = path.bounds(curio);
-    
-    var centerBbox = [  (b2[1][0] - b2[0][0])/2 , (b2[1][1] - b2[0][1])/2  ];
-    
-    testRect = b2;
-    
-    console.log(centerBbox);
     
     projection
       .scale(s)
@@ -186,7 +180,7 @@ function ready(error, mapObject, attributeOne, attributeTwo) {
     neighborhood = svg.append("g")
         .attr("class", "neighborhood")
     .selectAll("path")
-    .data(topojson.feature(mapObject, mapObject.objects.bairrosBelem).features)
+    .data(topojson.feature(mapObject, mapObject.objects.collection).features)
     .enter().append("path")
         .attr("d", path);
     
@@ -216,7 +210,8 @@ var buttons = svg.selectAll('.button')
     
     // Default Scale loaded
     setScale('area');
-    createDots();
+    //createDots();
+    scatterDots(feat.features, 'populacao');
 }
 
 function mute(botao, index){
@@ -288,4 +283,18 @@ function createDots(){
 		.attr("cy", function (d) { return projection(d)[1]; })
 		.attr("r", "8px")
 		.attr("fill", "red")
+}
+
+function scatterDots(features, s){
+    d3.select(".neighborhood").selectAll("circle")
+        .data( features ).enter()
+        .append("circle")
+        .attr("cx", function (d) { var num = [d.properties.pontoLongitude, d.properties.pontoLatitude]; return projection(num)[0]; } )
+        .attr("cy", function (d) { var num = [d.properties.pontoLongitude, d.properties.pontoLatitude]; return projection(num)[1]; } )
+        .attr("r", function (d) { 
+                    filterArray[d.properties.id].scaleClass = scales[s](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id));
+                    console.log(scales[s](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id)));
+                    return scales[s](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id)) + "px";
+    } )
+        .attr("fill", "red")
 }
