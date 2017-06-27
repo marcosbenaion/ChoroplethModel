@@ -23,9 +23,6 @@ var dataButton =
 // Define projection to use on the map - d3 Projections
 var projection = d3.geoEquirectangular();
 
-var aa =[-48.4931, -1.4698];
-var center = [];
-
 // Variable objects used to store the attributes
 var attributeOneDataArray= d3.map();
 var attributeTwoDataArray= d3.map();
@@ -108,6 +105,16 @@ svg.call(textureQ89);
 
 var neighborhood;
 
+// Zoom
+
+var zoom = d3.zoom()
+    .scaleExtent([1, 10])
+    .on("zoom", zoomed);
+
+var container;
+
+var feat2;
+
 //Load colors
 
 var colors = [{ colorMap: "rgb(247,251,255)",textureMap: textureQ09}, 
@@ -128,7 +135,9 @@ function ready(error, mapObject, attributeOne, attributeTwo) {
     
     if (error) throw error;
     
-    console.log(mapObject);
+    neighborhood = svg.select("g")
+                      .remove()
+                      .exit();
     
     // Assign to attributeOneDataArray the data in the attributeOne
     attributeOne.forEach(function(d) { 
@@ -169,9 +178,14 @@ function ready(error, mapObject, attributeOne, attributeTwo) {
     
     var feat = topojson.feature(mapObject, mapObject.objects.collection);
     
+    feat2 = topojson.feature(mapObject, mapObject.objects.collection.geometries[3]);
+    
     var b = path.bounds(feat),
       s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
       t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
+    
+    console.log(s);
+    console.log(t);
     
     projection
       .scale(s)
@@ -179,12 +193,13 @@ function ready(error, mapObject, attributeOne, attributeTwo) {
     
     neighborhood = svg.append("g")
         .attr("class", "neighborhood")
+        .call(zoom)
     .selectAll("path")
     .data(topojson.feature(mapObject, mapObject.objects.collection).features)
     .enter().append("path")
         .attr("d", path);
     
-    console.log(d3.selectAll(".neighborhood"));
+    container = svg.select("g");
     
     d3.selectAll('input').on('change', function() {
       setScale(this.id);
@@ -210,7 +225,6 @@ var buttons = svg.selectAll('.button')
     
     // Default Scale loaded
     setScale('area');
-    //createDots();
     scatterDots(feat.features, 'populacao');
 }
 
@@ -264,8 +278,8 @@ function setScale(s) {
           return "rgb(102, 103, 104)"; })
       }
     
-    neighborhood.on("click", function(d){ loadGraph(d.properties.nome); console.log(d);});
-    
+    neighborhood.on("click", function(d){
+        loadGraph(d.properties.nome);});
   }
 
 function setText(d){
@@ -279,7 +293,7 @@ function createDots(){
     d3.select(".neighborhood").selectAll("circle")
 		.data([aa]).enter()
 		.append("circle")
-		.attr("cx", function (d) { console.log("Circulo: " + projection(d)); return projection(d)[0]; })
+		.attr("cx", function (d) { return projection(d)[0]; })
 		.attr("cy", function (d) { return projection(d)[1]; })
 		.attr("r", "8px")
 		.attr("fill", "red")
@@ -293,8 +307,17 @@ function scatterDots(features, s){
         .attr("cy", function (d) { var num = [d.properties.pontoLongitude, d.properties.pontoLatitude]; return projection(num)[1]; } )
         .attr("r", function (d) { 
                     filterArray[d.properties.id].scaleClass = scales[s](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id));
-                    console.log(scales[s](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id)));
                     return scales[s](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id)) + "px";
     } )
         .attr("fill", "red")
+}
+
+function zoomed() {
+    var b = path.bounds(feat2),
+      s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
+      t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
+    
+    console.log(s);
+    console.log(t);
+  container.attr("transform", "translate(" + t + ")scale(" + s + ")");
 }
