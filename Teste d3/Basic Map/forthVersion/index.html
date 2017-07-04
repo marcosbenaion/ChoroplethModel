@@ -1,0 +1,59 @@
+<!-- Choropleth Map - TCC -->
+<!-- Author: Marcos Senna Benaion Leal -->
+
+<!DOCTYPE html>
+
+<html lang="eng">
+    
+    <meta charset="utf-8">
+
+    <!-- Header -->
+    <head>
+        <!-- Page Title -->
+        <title>Choropleth Map</title>
+        
+        <!-- Character Enconding -->
+        <meta charset="utf-8">
+        
+        <!-- Keywords -->
+        <meta name="keywords" content="Choropleth, Map, Belem, bairros">
+        
+        <!-- Page Description -->
+        <meta name="description" content="Choropleth map of Belem's Neighborhoods">
+        
+        <!-- Page Author -->
+        <meta name="author" content="Marcos Senna Benaion Leal">
+        
+        <!-- TO DO - Viewport? -->
+        
+        <!-- Cascade Style Sheet -->
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+    </head>
+
+    <body>
+        
+        <div class="container">
+            <div class="controlsSVGdiv">
+                <svg id="controlsSVG" width="50" height="500"> </svg>
+            </div>
+            
+            <div class="mapSVGdiv">
+                <!-- Map element SVG -->
+                <svg id="mapSVG" width="450" height="500"></svg>
+            </div>
+        </div>
+    </body>
+    
+</html>
+
+<!-- Runs the associated Javascript file -->
+
+<!-- Required files/Extensions -->
+<script src="https://d3js.org/d3.v4.min.js"></script>                        <!-- D3.js -->
+<script src="//d3js.org/topojson.v2.min.js"></script>                        <!-- Library to read TopoJSON files -->
+<script src="/js/extensions/d3button.js"></script>                           <!-- Add and style the buttons -->
+<script src="/js/extensions/simple_statistics.js"></script>                  <!-- Library to use Jenks Natural Break classification algorithm -->
+<script type="text/javascript" src="/js/extensions/textures.js"></script>    <!-- Library to add Textures on the map -->
+
+<!-- Main files to use/bind/manipulate the data/methods and show the visualizations -->
+<script type="text/javascript" src="/js/mapJavascript.js"></script>          <!-- Javascript file for the Map -->
