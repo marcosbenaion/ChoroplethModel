@@ -63,7 +63,7 @@ function update(data){
 
 //set up chart
 var margin = {top: 20, right: 20, bottom: 95, left: 70};
-var width = 600;
+var width = 450;
 var height = 500;
 
 var chart = d3.select(".chart")

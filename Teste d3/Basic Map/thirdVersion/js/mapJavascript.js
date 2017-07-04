@@ -3,9 +3,13 @@ var svg = d3.select("svg#mapSVG"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
 
+var controlsSVG = d3.select("svg#controlsSVG"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height");
+
 // Define the buttons positions
 var espacamentoTopo = 50;
-var espacamentoEsquerda = 50;
+var espacamentoEsquerda = 30;
 var espacamentoBotoes = 50;
 
 // Create the buttons for turning on/off filters
@@ -107,14 +111,6 @@ var neighborhood;
 
 // Zoom
 
-var zoom = d3.zoom()
-    .scaleExtent([1, 10])
-    .on("zoom", zoomed);
-
-var container;
-
-var feat2;
-
 //Load colors
 
 var colors = [{ colorMap: "rgb(247,251,255)",textureMap: textureQ09}, 
@@ -138,6 +134,11 @@ function ready(error, mapObject, attributeOne, attributeTwo) {
     neighborhood = svg.select("g")
                       .remove()
                       .exit();
+    
+    svg.call(d3.zoom().on("zoom", function () {
+              neighborhood.attr("transform", d3.event.transform);
+              d3.select(".neighborhood").selectAll("circle").attr("transform", d3.event.transform);
+      }))
     
     // Assign to attributeOneDataArray the data in the attributeOne
     attributeOne.forEach(function(d) { 
@@ -178,8 +179,6 @@ function ready(error, mapObject, attributeOne, attributeTwo) {
     
     var feat = topojson.feature(mapObject, mapObject.objects.collection);
     
-    feat2 = topojson.feature(mapObject, mapObject.objects.collection.geometries[3]);
-    
     var b = path.bounds(feat),
       s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
       t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
@@ -193,13 +192,10 @@ function ready(error, mapObject, attributeOne, attributeTwo) {
     
     neighborhood = svg.append("g")
         .attr("class", "neighborhood")
-        .call(zoom)
     .selectAll("path")
     .data(topojson.feature(mapObject, mapObject.objects.collection).features)
     .enter().append("path")
         .attr("d", path);
-    
-    container = svg.select("g");
     
     d3.selectAll('input').on('change', function() {
       setScale(this.id);
@@ -214,7 +210,7 @@ function ready(error, mapObject, attributeOne, attributeTwo) {
                                     console.log("Released", d, i, this.parentNode)});
     
 // Add buttons
-var buttons = svg.selectAll('.button')
+var buttons = controlsSVG.selectAll('.button')
     .data(dataButton)
   .enter()
     .append('g')
@@ -284,7 +280,12 @@ function setScale(s) {
 
 function setText(d){
         neighborhood.append("title")
-      .text(function(d) { return "ID: " + d.properties.id + ". Bairro " + d.properties.nome + ". Populacao: " + (d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id)) + ". Area: " + (d.AREA = attributeTwoDataArray.get(d.properties.id)) });
+            .text(function(d) { return "ID: " + d.properties.id + ". Bairro " + d.properties.nome + ". Populacao: " + (d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id)) + ". Area: " + (d.AREA = attributeTwoDataArray.get(d.properties.id)) });
+    
+        var dots = d3.select(".neighborhood").selectAll("circle");
+    
+        dots.append("title")
+            .text(function(d) { return "ID: " + d.properties.id + ". Bairro " + d.properties.nome + ". Populacao: " + (d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id)) + ". Area: " + (d.AREA = attributeTwoDataArray.get(d.properties.id)) });
     
     }
 
@@ -303,6 +304,7 @@ function scatterDots(features, s){
     d3.select(".neighborhood").selectAll("circle")
         .data( features ).enter()
         .append("circle")
+        .on("click", function(d) { loadGraph(d.properties.nome); })
         .attr("cx", function (d) { var num = [d.properties.pontoLongitude, d.properties.pontoLatitude]; return projection(num)[0]; } )
         .attr("cy", function (d) { var num = [d.properties.pontoLongitude, d.properties.pontoLatitude]; return projection(num)[1]; } )
         .attr("r", function (d) { 
@@ -310,9 +312,11 @@ function scatterDots(features, s){
                     return scales[s](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id)) + "px";
     } )
         .attr("fill", "red")
+        .append("title")
+            .text(function (d) { return "ID: " + d.properties.id + ". Bairro " + d.properties.nome + ". Populacao: " + (d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id)) + ". Area: " + (d.AREA = attributeTwoDataArray.get(d.properties.id)); } );
 }
 
-function zoomed() {
+/*function zoomed() {
     var b = path.bounds(feat2),
       s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
       t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
@@ -320,4 +324,4 @@ function zoomed() {
     console.log(s);
     console.log(t);
   container.attr("transform", "translate(" + t + ")scale(" + s + ")");
-}
+}*/
