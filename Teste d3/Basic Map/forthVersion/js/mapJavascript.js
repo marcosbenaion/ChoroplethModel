@@ -7,24 +7,61 @@ var controlsSVG = d3.select("svg#controlsSVG"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
 
+// Define the buttons positions
+var espacamentoTopo = 50;
+var espacamentoEsquerda = 30;
+var espacamentoBotoes = 50;
+
+// Create the buttons for turning on/off filters
+var dataButton = 
+    [{label: "0", x: espacamentoEsquerda, y: espacamentoTopo },
+    {label: "1", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 1},
+    {label: "2", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 2},
+    {label: "3", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 3},
+    {label: "4", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 4},
+    {label: "5", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 5},
+    {label: "6", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 6},
+    {label: "7", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 7},
+    {label: "8", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 8}];
+
+
 // Define projection to use on the map - d3 Projections
 var projection = d3.geoEquirectangular();
+
+// Variable objects used to store the attributes
+var attributeOneDataArray= d3.map();
+var attributeTwoDataArray= d3.map();
+
+// Variable scales store the different scales created
+var scales = {};
 
 // Create path and assign projection
 var path = d3.geoPath()
     .projection(projection);
+
+// Filter array
+var filterArray = {};
     
 // Create initial projection - will be changed later properly
 projection
     .scale(1)
     .translate([0, 0]);
 
+//Current map level
+var mapLevel = "brasil";
+
 //Map Current loaded
-var currentMap = "map/BRA.json";
+var currentMap = "map/" + mapLevel + ".json";
+
+//Data current loaded
+var currentPopulacao = "data/brasil/" + mapLevel + "Area.tsv";
+var currentArea = "data/brasil/" + mapLevel + "Populacao.tsv";
 
 // Queue load the map and data
 d3.queue()
     .defer(d3.json, currentMap)
+    .defer(d3.tsv, currentPopulacao)
+    .defer(d3.tsv, currentArea)
     .await(ready);
 
 // Function to manipulate the data in the map
