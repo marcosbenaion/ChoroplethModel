@@ -243,7 +243,10 @@ var buttons = controlsSVG.selectAll('.button')
 
 function drillDown(d) {
     currentMap = "map/" + d.properties.nome + ".json";
-    console.log(currentMap);
+    currentPopulacao = "data/brasil/" + d.properties.nome + "Populacao.tsv";
+    currentArea = "data/brasil/" + d.properties.nome + "Area.tsv";
+    
+    console.log(currentArea);
     
     projection
     .scale(1)
@@ -251,6 +254,9 @@ function drillDown(d) {
     
     d3.queue()
     .defer(d3.json, currentMap)
+    .defer(d3.tsv, currentPopulacao)
+    .defer(d3.tsv, currentArea)
+    
     .await(ready);
 }
     
