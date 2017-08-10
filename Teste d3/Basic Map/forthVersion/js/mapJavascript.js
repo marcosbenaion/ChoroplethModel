@@ -48,7 +48,7 @@ projection
     .translate([0, 0]);
 
 //Current map level
-var mapLevel = "brasil";
+var mapLevel = "Para";
 
 //Map Current loaded
 var currentMap = "map/" + mapLevel + ".json";
@@ -142,6 +142,8 @@ function ready(error, mapObject, attributeOne, attributeTwo) {
     
     if (error) throw error;
     
+    console.log(attributeOne);
+    
     neighborhood = svg.select("g")
                       .remove()
                       .exit();
@@ -176,8 +178,7 @@ function ready(error, mapObject, attributeOne, attributeTwo) {
     // Create the scale for the attributeOne
     scales.populacao = d3.scaleThreshold() // 'jenks9' is the scale name -- used in the setScale function
       .domain(ss.jenks // Use Jenks Natural Breaks Classification Algorithm
-              (attributeOne.map(function(d) { 
-        return +d.POPULACAO_TOTAL; }), 9)
+              (attributeOne.map(function(d) { return +d.POPULACAO_TOTAL; }), 9)
               // Scale created use the 'd' property values -- Correspondet Row, see above --
               // Values are assigned into one of the 'n' classes -- 9 in this case
              )
@@ -246,7 +247,11 @@ function drillDown(d) {
     currentPopulacao = "data/brasil/" + d.properties.nome + "Populacao.tsv";
     currentArea = "data/brasil/" + d.properties.nome + "Area.tsv";
     
-    console.log(currentArea);
+    attributeOneDataArray= d3.map();
+    attributeTwoDataArray= d3.map();
+    
+    scales = {};
+    filterArray = {};
     
     projection
     .scale(1)
@@ -277,6 +282,8 @@ function mute(botao, index){
     }
 
 function setScale(s) {
+    
+    console.log(filterArray);
     // Scale for populacao
     if (s == "populacao"){
         neighborhood.style("fill", function(d) { 
@@ -290,7 +297,7 @@ function setScale(s) {
     
     // Scale for area
       else if (s == "area"){
-          neighborhood.style("fill", function(d) { 
+          neighborhood.style("fill", function(d) {
           if (filterArray[d.properties.id].filtro2 == 1)
               {
                   // Textura -> Populacao / Cor -> Area
