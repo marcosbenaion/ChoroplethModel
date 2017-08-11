@@ -31,6 +31,7 @@ input {
 /* Styling for neighborhood */
 .neighborhood {
     stroke: #fff;
+    stroke-width: 0.7px;
     stroke-linejoin: round;
 }
 

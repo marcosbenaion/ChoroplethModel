@@ -48,7 +48,8 @@ projection
     .translate([0, 0]);
 
 //Current map level
-var mapLevel = "Para";
+var mapLevel = "Brasil";
+var mapLevelNumber = 1;
 
 //Map Current loaded
 var currentMap = "map/" + mapLevel + ".json";
@@ -135,14 +136,48 @@ var colors = [{ colorMap: "rgb(247,251,255)",textureMap: textureQ09},
               { colorMap: "rgb(8,48,107)",textureMap: textureQ89}
              ];
 
+var colorsOrange = 
+             [{ colorMap: "rgb(255,245,235)",textureMap: textureQ09}, 
+              { colorMap: "rgb(254,230,206)",textureMap: textureQ19},
+              { colorMap: "rgb(253,208,162)",textureMap: textureQ29}, 
+              { colorMap: "rgb(253,174,107)",textureMap: textureQ39}, 
+              { colorMap: "rgb(253,141,60)",textureMap: textureQ49}, 
+              { colorMap: "rgb(241,105,19)",textureMap: textureQ59}, 
+              { colorMap: "rgb(217,72,1)",textureMap: textureQ69}, 
+              { colorMap: "rgb(166,54,3)",textureMap: textureQ79}, 
+              { colorMap: "rgb(127,39,4)",textureMap: textureQ89}
+             ];
+
+var colorsGreen = 
+             [{ colorMap: "rgb(247,252,253)",textureMap: textureQ09}, 
+              { colorMap: "rgb(229,245,249)",textureMap: textureQ19},
+              { colorMap: "rgb(204,236,230)",textureMap: textureQ29}, 
+              { colorMap: "rgb(153,216,201)",textureMap: textureQ39}, 
+              { colorMap: "rgb(102,194,164)",textureMap: textureQ49}, 
+              { colorMap: "rgb(65,174,118)",textureMap: textureQ59}, 
+              { colorMap: "rgb(35,139,69)",textureMap: textureQ69}, 
+              { colorMap: "rgb(0,109,44)",textureMap: textureQ79}, 
+              { colorMap: "rgb(0,68,27)",textureMap: textureQ89}
+             ];
+
+var colorsRed = 
+             [{ colorMap: "rgb(255,255,204)",textureMap: textureQ09}, 
+              { colorMap: "rgb(255,237,160)",textureMap: textureQ19},
+              { colorMap: "rgb(254,217,118)",textureMap: textureQ29}, 
+              { colorMap: "rgb(254,178,76)",textureMap: textureQ39}, 
+              { colorMap: "rgb(253,141,60)",textureMap: textureQ49}, 
+              { colorMap: "rgb(252,78,42)",textureMap: textureQ59}, 
+              { colorMap: "rgb(227,26,28)",textureMap: textureQ69}, 
+              { colorMap: "rgb(189,0,38)",textureMap: textureQ79}, 
+              { colorMap: "rgb(128,0,38)",textureMap: textureQ89}
+             ];
+
 // Function to manipulate the data in the map
 function ready(error, mapObject, attributeOne, attributeTwo) {
     // mapObject = .json file - map
     // populacao = .tsv file - data
     
     if (error) throw error;
-    
-    console.log(attributeOne);
     
     neighborhood = svg.select("g")
                       .remove()
@@ -168,7 +203,7 @@ function ready(error, mapObject, attributeOne, attributeTwo) {
     });
     
     // Create the filter array to store the filter state and scale class
-    attributeOne.forEach(function(d) { 
+    attributeOne.forEach(function(d) {
         filterArray[d.ID] = {id: d.ID, filtro1: 1, filtro2:1, scaleClass: ""};
         // filterArray elements receive the same d.ID -- Correspondent Row, see above -- values of the attributeOne
         // Filter values starts at 1, meaning all data elements are included in the view
@@ -191,16 +226,11 @@ function ready(error, mapObject, attributeOne, attributeTwo) {
              )
       .range(d3.range(9).map(function(i) { return i; }));
     
-    console.log(mapObject);
-    
     var feat = topojson.feature(mapObject, mapObject.objects.collection);
     
     var b = path.bounds(feat),
       s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
       t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
-    
-    console.log(s);
-    console.log(t);
     
     projection
       .scale(s)
@@ -243,26 +273,33 @@ var buttons = controlsSVG.selectAll('.button')
 }
 
 function drillDown(d) {
-    currentMap = "map/" + d.properties.nome + ".json";
-    currentPopulacao = "data/brasil/" + d.properties.nome + "Populacao.tsv";
-    currentArea = "data/brasil/" + d.properties.nome + "Area.tsv";
+    // Verificar se eh Para ou Belem -- apenas estes disponiveis
+    if ( (mapLevelNumber < 3) && ((d.properties.nome == "Para") || (d.properties.nome == "Belem") ) ){
+        currentMap = "map/" + d.properties.nome + ".json";
+        currentPopulacao = "data/brasil/" + d.properties.nome + "Populacao.tsv";
+        currentArea = "data/brasil/" + d.properties.nome + "Area.tsv";
     
-    attributeOneDataArray= d3.map();
-    attributeTwoDataArray= d3.map();
+        projection
+        .scale(1)
+        .translate([0, 0]);
+        
+        mapLevelNumber = mapLevelNumber + 1;
     
-    scales = {};
-    filterArray = {};
+        d3.queue()
+        .defer(d3.json, currentMap)
+        .defer(d3.tsv, currentPopulacao)
+        .defer(d3.tsv, currentArea)
     
-    projection
-    .scale(1)
-    .translate([0, 0]);
+        .await(ready);
+    } else {
+        if (mapLevelNumber == 3){
+            loadGraph(d.properties.nome);
+        }
+        else {
+            console.log("Nao disponivel");
+        }
+    }
     
-    d3.queue()
-    .defer(d3.json, currentMap)
-    .defer(d3.tsv, currentPopulacao)
-    .defer(d3.tsv, currentArea)
-    
-    .await(ready);
 }
     
 function mute(botao, index){
@@ -282,8 +319,7 @@ function mute(botao, index){
     }
 
 function setScale(s) {
-    
-    console.log(filterArray);
+
     // Scale for populacao
     if (s == "populacao"){
         neighborhood.style("fill", function(d) { 
@@ -349,7 +385,7 @@ function scatterDots(features, s){
     d3.select(".neighborhood").selectAll("circle")
         .data( features ).enter()
         .append("circle")
-        .on("click", function(d) { loadGraph(d.properties.nome); })
+        .on("click", drillDown)
         .attr("cx", function (d) { var num = [d.properties.pontoLongitude, d.properties.pontoLatitude]; return projection(num)[0]; } )
         .attr("cy", function (d) { var num = [d.properties.pontoLongitude, d.properties.pontoLatitude]; return projection(num)[1]; } )
         .attr("r", function (d) { 

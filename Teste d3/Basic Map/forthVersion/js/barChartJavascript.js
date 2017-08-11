@@ -4,7 +4,7 @@ function loadGraph(bairroNome){
     
     nomeBairroChart = bairroNome;
     
-    var bairroSelecionado = "data/bairros/testVar/" + bairroNome + ".tsv";
+    var bairroSelecionado = "data/brasil/bairros/" + bairroNome + ".tsv";
     
     d3.tsv(bairroSelecionado, function(d) {
         d.value = +d.value;
