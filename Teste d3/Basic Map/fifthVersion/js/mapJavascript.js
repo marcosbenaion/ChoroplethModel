@@ -51,8 +51,10 @@ projection
 var mapLevel = "Brasil";
 var mapLevelNumber = 1;
 
-// Last map level
-var mapLastLevel;
+// Map Level hiera
+var mapLevelOne = "Brasil";
+var mapLevelTwo;
+var mapLevelThree;
 
 //Map Current loaded
 var currentMap = "map/" + mapLevel + ".json";
@@ -123,8 +125,6 @@ var testRect;
 //svg.call(textureQ89);
 
 var neighborhood;
-
-// Zoom
 
 //Load colors
 
@@ -246,7 +246,7 @@ function ready(error, mapObject, attributeOne, attributeTwo) {
     .selectAll("path")
     .data(topojson.feature(mapObject, mapObject.objects.collection).features)
     .enter().append("path")
-    .on("click", drillDown)
+    .on('click', drillDown)
         .attr("d", path);
     
     d3.selectAll('input').on('change', function() {
@@ -280,6 +280,7 @@ var buttons = controlsSVG.selectAll('.button')
 function drillDown(d) {
     // Verificar se eh Para ou Belem -- apenas estes disponiveis
     if ( (mapLevelNumber < 3) && ((d.properties.nome == "Para") || (d.properties.nome == "Belem") ) ){
+        mapCurrentLevel = d.properties.nome;
         
         currentMap = "map/" + d.properties.nome + ".json";
         currentPopulacao = "data/brasil/" + d.properties.nome + "Populacao.tsv";
@@ -290,6 +291,15 @@ function drillDown(d) {
         .translate([0, 0]);
         
         mapLevelNumber = mapLevelNumber + 1;
+        
+        if (mapLevelNumber == 2){
+            mapLevelTwo = d.properties.nome;
+            document.getElementById("hierarchicTwo").innerHTML = d.properties.nome;
+            
+        } else if (mapLevelNumber == 3){
+            mapLevelThree = d.properties.nome;
+            document.getElementById("hierarchicThree").innerHTML = d.properties.nome;
+        }
     
         d3.queue()
         .defer(d3.json, currentMap)
@@ -312,7 +322,7 @@ function mute(botao, index){
     var labelBotao = botao.label;
     var scaleClass = filterArray[index.ID].scaleClass;
     if ((scaleClass) == (labelBotao)){
-        filterArray[index.ID].filtro1 = 0;
+        filterArray[index.ID].filtro2 = 0;
     }
 }
     
@@ -320,7 +330,7 @@ function mute(botao, index){
         var labelBotao = botao.label;
         var scaleClass = filterArray[index.ID].scaleClass;
         if ((scaleClass) == (labelBotao)){
-            filterArray[index.ID].filtro1 = 1;
+            filterArray[index.ID].filtro2 = 1;
         }
     }
 
@@ -333,8 +343,11 @@ function setScale(s) {
               {
                   filterArray[d.properties.id].scaleClass = scales[s](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id));
                   return colors[scales[s](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id))].colorMap;
+              } else{
+                    return "rgb(102, 103, 104)"; 
               }
-          return "rgb(102, 103, 104)"; })
+        })
+        
     }
     
     // Scale for area
@@ -356,8 +369,13 @@ function setScale(s) {
                   // Area
                   /*filterArray[d.properties.id].scaleClass = scales[s](d.AREA = attributeTwoDataArray.get(d.properties.id));
                   return colors[scales[s](d.AREA = attributeTwoDataArray.get(d.properties.id))].colorMap;*/
+              } else{
+                  filterArray[d.properties.id].scaleClass = scales[s](d.AREA = attributeTwoDataArray.get(d.properties.id));
+                  var cor = colors[scales[s](d.AREA = attributeTwoDataArray.get(d.properties.id))].colorMap;
+                  
+                  return cor;
               }
-          return "rgb(102, 103, 104)"; })
+         })
       }
     
     /*neighborhood.on("click", function(d){
@@ -401,4 +419,85 @@ function scatterDots(features, s){
         .attr("fill", "red")
         .append("title")
             .text(function (d) { return "ID: " + d.properties.id + ". " + d.properties.nome + ". Populacao: " + (d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id)) + ". Area: " + (d.AREA = attributeTwoDataArray.get(d.properties.id)); } );
+}
+
+d3.select("b#hierarchicOne").on("click", returnDownOne);
+d3.select("b#hierarchicTwo").on("click", returnDownTwo);
+d3.select("b#hierarchicThree").on("click", returnDownThree);
+
+function returnDownOne(){
+    var novoDrillDown = document.getElementById("hierarchicOne").innerHTML;
+    mapCurrentLevel = novoDrillDown;
+        
+        currentMap = "map/" + novoDrillDown + ".json";
+        currentPopulacao = "data/brasil/" + novoDrillDown + "Populacao.tsv";
+        currentArea = "data/brasil/" + novoDrillDown + "Area.tsv";
+    
+        document.getElementById("hierarchicTwo").innerHTML = "";
+        document.getElementById("hierarchicThree").innerHTML = "";
+    
+        mapLevelTwo = "";
+        mapLevelThree = "";
+    
+        projection
+        .scale(1)
+        .translate([0, 0]);
+        
+        mapLevelNumber = 1;
+    
+        d3.queue()
+        .defer(d3.json, currentMap)
+        .defer(d3.tsv, currentPopulacao)
+        .defer(d3.tsv, currentArea)
+    
+        .await(ready);
+}
+
+function returnDownTwo(){
+    var novoDrillDown = document.getElementById("hierarchicTwo").innerHTML;
+    mapCurrentLevel = novoDrillDown;
+        
+        currentMap = "map/" + novoDrillDown + ".json";
+        currentPopulacao = "data/brasil/" + novoDrillDown + "Populacao.tsv";
+        currentArea = "data/brasil/" + novoDrillDown + "Area.tsv";
+    
+        projection
+        .scale(1)
+        .translate([0, 0]);
+        
+        mapLevelNumber = 2;
+    
+        document.getElementById("hierarchicTwo").innerHTML = mapLevelTwo;
+        document.getElementById("hierarchicThree").innerHTML = "";
+    
+        mapLevelThree = "";
+    
+        d3.queue()
+        .defer(d3.json, currentMap)
+        .defer(d3.tsv, currentPopulacao)
+        .defer(d3.tsv, currentArea)
+    
+        .await(ready);
+}
+
+function returnDownThree(){
+    var novoDrillDown = document.getElementById("hierarchicThree").innerHTML;
+    mapCurrentLevel = novoDrillDown;
+        
+        currentMap = "map/" + novoDrillDown + ".json";
+        currentPopulacao = "data/brasil/" + novoDrillDown + "Populacao.tsv";
+        currentArea = "data/brasil/" + novoDrillDown + "Area.tsv";
+    
+        projection
+        .scale(1)
+        .translate([0, 0]);
+        
+        mapLevelNumber = 3;
+    
+        d3.queue()
+        .defer(d3.json, currentMap)
+        .defer(d3.tsv, currentPopulacao)
+        .defer(d3.tsv, currentArea)
+    
+        .await(ready);
 }
