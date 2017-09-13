@@ -13,17 +13,25 @@ var espacamentoEsquerda = 30;
 var espacamentoBotoes = 50;
 
 // Create the buttons for turning on/off filters
-var dataButton = 
-    [{label: "0", x: espacamentoEsquerda, y: espacamentoTopo },
-    {label: "1", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 1},
-    {label: "2", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 2},
-    {label: "3", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 3},
-    {label: "4", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 4},
-    {label: "5", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 5},
-    {label: "6", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 6},
-    {label: "7", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 7},
-    {label: "8", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 8}];
 
+/*var dataButton = 
+    [{label: "", x: espacamentoEsquerda, y: espacamentoTopo,                        color: "rgb(247,251,255)", secretLabel: "0" },
+    {label: "", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 1, color: "rgb(222,235,247)", secretLabel: "1" },
+    {label: "", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 2, color: "rgb(198,219,239)", secretLabel: "2" },
+    {label: "", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 3, color: "rgb(158,202,225)", secretLabel: "3" },
+    {label: "", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 4, color: "rgb(107,174,214)", secretLabel: "4" },
+    {label: "", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 5, color: "rgb(66,146,198)", secretLabel: "5" },
+    {label: "", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 6, color: "rgb(33,113,181)", secretLabel: "6" },
+    {label: "", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 7, color: "rgb(8,81,156)", secretLabel: "7" },
+    {label: "", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 8, color: "rgb(8,48,107)", secretLabel: "8" }];*/
+
+var dataButtonCores = 
+    [{label: "", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 1, color: "rgb(222,235,247)", secretLabel: "1" },
+    {label: "", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 2, color: "rgb(198,219,239)", secretLabel: "2" },
+    {label: "", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 3, color: "rgb(158,202,225)", secretLabel: "3" },
+    {label: "", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 4, color: "rgb(107,174,214)", secretLabel: "4" },
+    {label: "", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 5, color: "rgb(66,146,198)", secretLabel: "5" },
+    {label: "", x: espacamentoEsquerda, y: espacamentoTopo + espacamentoBotoes * 6, color: "rgb(33,113,181)", secretLabel: "6" }];
 
 // Define projection to use on the map - d3 Projections
 var projection = d3.geoEquirectangular();
@@ -41,6 +49,7 @@ var path = d3.geoPath()
 
 // Filter array
 var filterArray = {};
+var filterArrayLenght = 27;
     
 // Create initial projection - will be changed later properly
 projection
@@ -72,45 +81,41 @@ d3.queue()
 
 // Load Textures
 var textureQ09 = textures.lines()
-    .lighter();
-
-var textureQ19 = textures.lines()
-    .size(2)
-    .strokeWidth(1);
-
-var textureQ29 = textures.lines()
-    .size(3)
-    .strokeWidth(1);
-
-var textureQ39 = textures.lines()
     .size(5)
     .strokeWidth(1);
 
+
+var textureQ19 = textures.lines()
+    .size(25)
+    .strokeWidth(1);
+
+var textureQ29 = textures.lines()
+    .size(20)
+    .strokeWidth(1);
+
+var textureQ39 = textures.lines()
+    .size(15)
+    .strokeWidth(1);
+
 var textureQ49 = textures.lines()
-    .size(8)
-    .strokeWidth(2);
+    .size(10)
+    .strokeWidth(1);
 
 var textureQ59 = textures.lines()
-    .size(10)
-    .strokeWidth(2);
+    .size(5)
+    .strokeWidth(1);
 
 var textureQ69 = textures.lines()
-    .size(12)
-    .strokeWidth(2);
+    .size(3)
+    .strokeWidth(1);
 
 var textureQ79 = textures.lines()
-    .orientation("vertical")
-    .heavier(10)
-    .thinner(1.5)
-    .size(6)
-    .strokeWidth(2);
+    .size(14)
+    .strokeWidth(3);
 
 var textureQ89 = textures.lines()
-    .orientation("vertical")
-    .heavier(10)
-    .thinner(1.5)
-    .size(6)
-    .strokeWidth(5);
+    .size(16)
+    .strokeWidth(3);
 
 var testRect;
 
@@ -184,6 +189,8 @@ function ready(error, mapObject, attributeOne, attributeTwo) {
     
     console.log(mapObject);
     
+    filterArray = {};
+    
     neighborhood = svg.select("g")
                       .remove()
                       .exit();
@@ -209,7 +216,7 @@ function ready(error, mapObject, attributeOne, attributeTwo) {
     
     // Create the filter array to store the filter state and scale class
     attributeOne.forEach(function(d) {
-        filterArray[d.ID] = {id: d.ID, filtro1: 1, filtro2:1, scaleClass: ""};
+        filterArray[d.ID] = {id: d.ID, filtro1: 1, filtro2:1, scaleClassPopulacao: "", scaleClassArea: ""};
         // filterArray elements receive the same d.ID -- Correspondent Row, see above -- values of the attributeOne
         // Filter values starts at 1, meaning all data elements are included in the view
         // Scale class values will be set on the setScale function
@@ -218,18 +225,18 @@ function ready(error, mapObject, attributeOne, attributeTwo) {
     // Create the scale for the attributeOne
     scales.populacao = d3.scaleThreshold() // 'jenks9' is the scale name -- used in the setScale function
       .domain(ss.jenks // Use Jenks Natural Breaks Classification Algorithm
-              (attributeOne.map(function(d) { return +d.POPULACAO_TOTAL; }), 9)
+              (attributeOne.map(function(d) { return +d.POPULACAO_TOTAL; }), 7)
               // Scale created use the 'd' property values -- Correspondet Row, see above --
               // Values are assigned into one of the 'n' classes -- 9 in this case
              )
-      .range(d3.range(9).map(function(i) { return i; }));
+      .range(d3.range(7).map(function(i) { return i; }));
     
     // Create the scale for the attributeTwo
     scales.area = d3.scaleThreshold()
       .domain(ss.jenks
-              (attributeTwo.map(function(d) { return +d.AREA; }), 9)
+              (attributeTwo.map(function(d) { return +d.AREA; }), 7)
              )
-      .range(d3.range(9).map(function(i) { return i; }));
+      .range(d3.range(7).map(function(i) { return i; }));
     
     var feat = topojson.feature(mapObject, mapObject.objects.collection);
     
@@ -254,16 +261,16 @@ function ready(error, mapObject, attributeOne, attributeTwo) {
 });
         
     var button = d3.button()
-    .on('press', function(d, i) { attributeOne.forEach (mute.bind(null, d));
+    .on('press', function(d, i) { attributeTwo.forEach (mute.bind(null, d));
                                  setScale('area');
                                  console.log("Pressed", d, i, this.parentNode);})
-    .on('release', function(d, i) { attributeOne.forEach (unmute.bind(null, d));
+    .on('release', function(d, i) { attributeTwo.forEach (unmute.bind(null, d));
                                     setScale('area');
                                     console.log("Released", d, i, this.parentNode)});
     
 // Add buttons
 var buttons = controlsSVG.selectAll('.button')
-    .data(dataButton)
+    .data(dataButtonCores)
   .enter()
     .append('g')
     .attr('class', 'button')
@@ -285,10 +292,14 @@ function drillDown(d) {
         currentMap = "map/" + d.properties.nome + ".json";
         currentPopulacao = "data/brasil/" + d.properties.nome + "Populacao.tsv";
         currentArea = "data/brasil/" + d.properties.nome + "Area.tsv";
+        
+        attributeTwo = {};
     
         projection
         .scale(1)
         .translate([0, 0]);
+        
+        filterArray = {};
         
         mapLevelNumber = mapLevelNumber + 1;
         
@@ -319,20 +330,42 @@ function drillDown(d) {
 }
     
 function mute(botao, index){
-    var labelBotao = botao.label;
-    var scaleClass = filterArray[index.ID].scaleClass;
-    if ((scaleClass) == (labelBotao)){
-        filterArray[index.ID].filtro2 = 0;
-    }
-}
+    var labelBotao = botao.secretLabel;
     
-    function unmute(botao, index){
-        var labelBotao = botao.label;
-        var scaleClass = filterArray[index.ID].scaleClass;
-        if ((scaleClass) == (labelBotao)){
-            filterArray[index.ID].filtro2 = 1;
+    if(mapLevelNumber == 1){
+        filterArrayLenght = 27;
+    } else if (mapLevelNumber == 2){
+        filterArrayLenght = 144;
+    } else if (mapLevelNumber == 3){
+        filterArrayLenght = 71;
+    }
+    
+    for (i = 1; i < filterArrayLenght; i++) { 
+        if ((filterArray[i].scaleClassArea) == (labelBotao)){
+            filterArray[i].filtro2 = 0;
         }
     }
+
+}
+    
+function unmute(botao, index){
+    var labelBotao = botao.secretLabel;
+        
+    if(mapLevelNumber == 1){
+        filterArrayLenght = 27;
+    } else if (mapLevelNumber == 2){
+        filterArrayLenght = 144;
+    } else if (mapLevelNumber == 3){
+        filterArrayLenght = 71;
+    }
+    
+    for (i = 1; i < filterArrayLenght; i++) { 
+        if ((filterArray[i].scaleClassArea) == (labelBotao)){
+            filterArray[i].filtro2 = 1;
+        }
+    }
+        
+}
 
 function setScale(s) {
 
@@ -341,7 +374,7 @@ function setScale(s) {
         neighborhood.style("fill", function(d) { 
           if (filterArray[d.properties.id].filtro1 == 1)
               {
-                  filterArray[d.properties.id].scaleClass = scales[s](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id));
+                  filterArray[d.properties.id].scaleClassPopulacao = scales[s](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id));
                   return colors[scales[s](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id))].colorMap;
               } else{
                     return "rgb(102, 103, 104)"; 
@@ -356,24 +389,26 @@ function setScale(s) {
           if (filterArray[d.properties.id].filtro2 == 1)
               {
                   // Textura -> Populacao / Cor -> Area
-                  filterArray[d.properties.id].scaleClass = scales[s](d.AREA = attributeTwoDataArray.get(d.properties.id));
-                  var cor = colors[scales[s](d.AREA = attributeTwoDataArray.get(d.properties.id))].colorMap;
+                  filterArray[d.properties.id].scaleClassArea = scales["area"](d.AREA = attributeTwoDataArray.get(d.properties.id));
+                  var cor = colors[scales["area"](d.AREA = attributeTwoDataArray.get(d.properties.id))].colorMap;
                   
-                  filterArray[d.properties.id].scaleClass = scales[s](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id));
+                  //console.log(d.properties.nome);
+                  //console.log(filterArray[d.properties.id]);
+                  
+                  filterArray[d.properties.id].scaleClassPopulacao = scales["populacao"](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id));
                   var textureTemp = colors[scales["populacao"](attributeOneDataArray.get(d.properties.id))].textureMap;
                   textureTemp.background(cor);
                   svg.call(textureTemp);
                   
                   return textureTemp.url();
+                  return cor;
                                 
                   // Area
                   /*filterArray[d.properties.id].scaleClass = scales[s](d.AREA = attributeTwoDataArray.get(d.properties.id));
                   return colors[scales[s](d.AREA = attributeTwoDataArray.get(d.properties.id))].colorMap;*/
               } else{
-                  filterArray[d.properties.id].scaleClass = scales[s](d.AREA = attributeTwoDataArray.get(d.properties.id));
-                  var cor = colors[scales[s](d.AREA = attributeTwoDataArray.get(d.properties.id))].colorMap;
                   
-                  return cor;
+                  return "rgb(130, 138, 153)";
               }
          })
       }
@@ -413,7 +448,7 @@ function scatterDots(features, s){
         .attr("cx", function (d) { var num = [d.properties.pontoLongitude, d.properties.pontoLatitude]; return projection(num)[0]; } )
         .attr("cy", function (d) { var num = [d.properties.pontoLongitude, d.properties.pontoLatitude]; return projection(num)[1]; } )
         .attr("r", function (d) { 
-                    filterArray[d.properties.id].scaleClass = scales[s](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id));
+                    filterArray[d.properties.id].scaleClassPopulacao = scales[s](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id));
                     return scales[s](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id)) + "px";
     } )
         .attr("fill", "red")

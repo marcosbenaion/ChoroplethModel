@@ -78,23 +78,23 @@ path {
     fill: #af2821; /* navy 100% */
 }
 
-.button #gradient-start {
+/*.button #gradient-start {
     stop-color: #45a024; /* navy 40% */
-    stop-opacity: 1;
-}
+    /*stop-opacity: 1;
+}*/
 
-.button #gradient-stop {
+/*.button #gradient-stop {
     stop-color: #42f49e; /* navy 70% */
-    stop-opacity: 1;
-}
+    /*stop-opacity: 1;
+}*/
 
-.button #gradient-start.active, .button #gradient-start.pressed {
-    stop-color: #4d576b; /* navy 70% */
-}
+/*.button #gradient-start.active, .button #gradient-start.pressed {
+    stop-color: #4d576b;
+}*/
 
-.button #gradient-stop.active, .button #gradient-stop.pressed {
-    stop-color: #000f2b; /* navy 100% */
-}
+/*.button #gradient-stop.active, .button #gradient-stop.pressed {
+    stop-color: #000f2b;
+}*/
 
 .button text {
     font-size: 15px;

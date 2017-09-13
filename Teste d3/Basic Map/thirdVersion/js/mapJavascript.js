@@ -266,7 +266,7 @@ function setScale(s) {
                   textureTemp.background(cor);
                   svg.call(textureTemp);
                   return textureTemp.url();
-                                
+
                   // Area
                   /*filterArray[d.properties.id].scaleClass = scales[s](d.AREA = attributeTwoDataArray.get(d.properties.id));
                   return colors[scales[s](d.AREA = attributeTwoDataArray.get(d.properties.id))].colorMap;*/

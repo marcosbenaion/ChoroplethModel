@@ -50,7 +50,7 @@ d3.button = function() {
         .attr('id', 'gradient-stop')
         .attr('offset', '100%')
 
-    d3.select(this).select('rect').attr('fill', 'url(#gradient' + i + ")" );
+    d3.select(this).select('rect').attr('fill', function (d) { return d.color;} );
   }
 
   function addShadow(d, i) {

@@ -104,11 +104,11 @@ var yAxis = d3.axisLeft(yChart);
 chart
 	.append("text")
 	.attr("transform", "translate(-60," +  (height+margin.bottom)/2 + ") rotate(-90)")
-	.text("Dado");
+	.text("Dado Arbitrário");
 		
 chart
 	.append("text")
-	.attr("transform", "translate(" + (width/2) + "," + (height + margin.bottom - 5) + ")")
+	.attr("transform", "translate(" + (width/2) + "," + (height + margin.bottom - 30) + ")")
 	.text("Ano");
 
 /*function draw(data){
