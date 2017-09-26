@@ -86,16 +86,19 @@ var textureQ09 = textures.lines()
 
 
 var textureQ19 = textures.lines()
-    .size(25)
-    .strokeWidth(1);
+    .orientation("vertical")
+    .size(5)
+    .strokeWidth(1)
+    .shapeRendering("crispEdges");
 
-var textureQ29 = textures.lines()
-    .size(20)
-    .strokeWidth(1);
+var textureQ29 = textures.circles()
+    .thicker();
 
-var textureQ39 = textures.lines()
-    .size(15)
-    .strokeWidth(1);
+var textureQ39 = textures.circles()
+    .radius(4)
+    .size(7)
+    .fill("transparent")
+    .strokeWidth(2);
 
 var textureQ49 = textures.lines()
     .size(10)
@@ -119,6 +122,34 @@ var textureQ89 = textures.lines()
 
 var testRect;
 
+var menor1 = 0;
+var menor2 = 0;
+var menor3 = 0;
+var menor4 = 0;
+var menor5 = 0;
+var menor6 = 0;
+
+var maior1 = 0;
+var maior2 = 0;
+var maior3 = 0;
+var maior4 = 0;
+var maior5 = 0;
+var maior6 = 0;
+
+var menorPop1 = 0;
+var menorPop2 = 0;
+var menorPop3 = 0;
+var menorPop4 = 0;
+var menorPop5 = 0;
+var menorPop6 = 0;
+
+var maiorPop1 = 0;
+var maiorPop2 = 0;
+var maiorPop3 = 0;
+var maiorPop4 = 0;
+var maiorPop5 = 0;
+var maiorPop6 = 0;
+
 //svg.call(textureQ09);
 //svg.call(textureQ19);
 //svg.call(textureQ29);
@@ -130,6 +161,8 @@ var testRect;
 //svg.call(textureQ89);
 
 var neighborhood;
+
+var classes = 1;
 
 //Load colors
 
@@ -236,7 +269,11 @@ function ready(error, mapObject, attributeOne, attributeTwo) {
       .domain(ss.jenks
               (attributeTwo.map(function(d) { return +d.AREA; }), 7)
              )
-      .range(d3.range(7).map(function(i) { return i; }));
+      .range(d3.range(7).map(function(i) { 
+        if (i > classes){
+            classes = i;
+        }
+        return i; }));
     
     var feat = topojson.feature(mapObject, mapObject.objects.collection);
     
@@ -276,10 +313,35 @@ var buttons = controlsSVG.selectAll('.button')
     .attr('class', 'button')
     .call(button);
     
+var buttons2 = controlsSVG.selectAll('.button')
+    .data(dataButtonCores)
+  .enter()
+    .append('g')
+    .attr('class', 'button')
+    .call(button);
+    
     setText(attributeOneDataArray);
     
     // Default Scale loaded
     setScale('area');
+    
+    document.getElementById("texto1").innerHTML = maior1 + " - " + menor1;
+    document.getElementById("texto2").innerHTML = maior2 + " - " + menor2;
+    document.getElementById("texto3").innerHTML = maior3 + " - " + menor3;
+    document.getElementById("texto4").innerHTML = maior4 + " - " + menor4;
+    document.getElementById("texto5").innerHTML = maior5 + " - " + menor5;
+    document.getElementById("texto6").innerHTML = maior6 + " - " + menor6;
+    
+    document.getElementById("texto7").innerHTML = maiorPop1 + " - " + menorPop1;
+    document.getElementById("texto8").innerHTML = maiorPop2 + " - " + menorPop2;
+    document.getElementById("texto9").innerHTML = maiorPop3 + " - " + menorPop3;
+    document.getElementById("texto10").innerHTML = maiorPop4 + " - " + menorPop4;
+    document.getElementById("texto11").innerHTML = maiorPop5 + " - " + menorPop5;
+    document.getElementById("texto12").innerHTML = maiorPop6 + " - " + menorPop6;
+    
+    console.log(menorPop1);
+    console.log(menor1);
+    
     scatterDots(feat.features, 'populacao');
     
 }
@@ -292,6 +354,34 @@ function drillDown(d) {
         currentMap = "map/" + d.properties.nome + ".json";
         currentPopulacao = "data/brasil/" + d.properties.nome + "Populacao.tsv";
         currentArea = "data/brasil/" + d.properties.nome + "Area.tsv";
+        
+        menor1 = 0;
+        menor2 = 0;
+        menor3 = 0;
+        menor4 = 0;
+        menor5 = 0;
+        menor6 = 0;
+
+        maior1 = 0;
+        maior2 = 0;
+        maior3 = 0;
+        maior4 = 0;
+        maior5 = 0;
+        maior6 = 0;
+        
+        menorPop1 = 0;
+        menorPop2 = 0;
+        menorPop3 = 0;
+        menorPop4 = 0;
+        menorPop5 = 0;
+        menorPop6 = 0;
+
+        maiorPop1 = 0;
+        maiorPop2 = 0;
+        maiorPop3 = 0;
+        maiorPop4 = 0;
+        maiorPop5 = 0;
+        maiorPop6 = 0;
         
         attributeTwo = {};
     
@@ -392,6 +482,96 @@ function setScale(s) {
                   filterArray[d.properties.id].scaleClassArea = scales["area"](d.AREA = attributeTwoDataArray.get(d.properties.id));
                   var cor = colors[scales["area"](d.AREA = attributeTwoDataArray.get(d.properties.id))].colorMap;
                   
+                  if ((scales["area"](d.AREA = attributeTwoDataArray.get(d.properties.id))) == 1){
+                      if(menor1 == 0){
+                          menor1 = d.AREA;
+                      }
+                      
+                      if((d.AREA) > maior1){
+                          maior1 = d.AREA;
+                      }
+                      
+                      if((d.AREA) < menor1){
+                          menor1 = d.AREA;
+                      }
+                      
+                  }
+                  
+                  if ((scales["area"](d.AREA = attributeTwoDataArray.get(d.properties.id))) == 2){
+                      if(menor2 == 0){
+                          menor2 = d.AREA;
+                      }
+                      
+                      if((d.AREA) > maior2){
+                          maior2 = d.AREA;
+                      }
+                      
+                      if((d.AREA) < menor2){
+                          menor2 = d.AREA;
+                      }
+                      
+                  }
+                  
+                  if ((scales["area"](d.AREA = attributeTwoDataArray.get(d.properties.id))) == 3){
+                      if(menor3 == 0){
+                          menor3 = d.AREA;
+                      }
+                      
+                      if((d.AREA) > maior3){
+                          maior3 = d.AREA;
+                      }
+                      
+                      if((d.AREA) < menor3){
+                          menor3 = d.AREA;
+                      }
+                      
+                  }
+                  
+                  if ((scales["area"](d.AREA = attributeTwoDataArray.get(d.properties.id))) == 4){
+                      if(menor4 == 0){
+                          menor4 = d.AREA;
+                      }
+                      
+                      if((d.AREA) > maior4){
+                          maior4 = d.AREA;
+                      }
+                      
+                      if((d.AREA) < menor4){
+                          menor4 = d.AREA;
+                      }
+                      
+                  }
+                  
+                  if ((scales["area"](d.AREA = attributeTwoDataArray.get(d.properties.id))) == 5){
+                      if(menor5 == 0){
+                          menor5 = d.AREA;
+                      }
+                      
+                      if((d.AREA) > maior5){
+                          maior5 = d.AREA;
+                      }
+                      
+                      if((d.AREA) < menor5){
+                          menor5 = d.AREA;
+                      }
+                      
+                  }
+                  
+                  if ((scales["area"](d.AREA = attributeTwoDataArray.get(d.properties.id))) == 6){
+                      if(menor6 == 0){
+                          menor6 = d.AREA;
+                      }
+                      
+                      if((d.AREA) > maior6){
+                          maior6 = d.AREA;
+                      }
+                      
+                      if((d.AREA) < menor6){
+                          menor6 = d.AREA;
+                      }
+                      
+                  }
+                  
                   //console.log(d.properties.nome);
                   //console.log(filterArray[d.properties.id]);
                   
@@ -399,6 +579,96 @@ function setScale(s) {
                   var textureTemp = colors[scales["populacao"](attributeOneDataArray.get(d.properties.id))].textureMap;
                   textureTemp.background(cor);
                   svg.call(textureTemp);
+                  
+                  if (scales["populacao"](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id)) == 1){
+                      if(menorPop1 == 0){
+                          menorPop1 = d.POPULACAO_TOTAL;
+                      }
+                      
+                      if((d.POPULACAO_TOTAL) > maiorPop1){
+                          maiorPop1 = d.POPULACAO_TOTAL;
+                      }
+                      
+                      if((d.POPULACAO_TOTAL) < menorPop1){
+                          menorPop1 = d.POPULACAO_TOTAL;
+                      }
+                      
+                  }
+                  
+                  if (scales["populacao"](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id)) == 2){
+                      if(menorPop2 == 0){
+                          menorPop2 = d.POPULACAO_TOTAL;
+                      }
+                      
+                      if((d.POPULACAO_TOTAL) > maiorPop2){
+                          maiorPop2 = d.POPULACAO_TOTAL;
+                      }
+                      
+                      if((d.POPULACAO_TOTAL) < menorPop2){
+                          menorPop2 = d.POPULACAO_TOTAL;
+                      }
+                      
+                  }
+                  
+                  if (scales["populacao"](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id)) == 3){
+                      if(menorPop3 == 0){
+                          menorPop3 = d.POPULACAO_TOTAL;
+                      }
+                      
+                      if((d.POPULACAO_TOTAL) > maiorPop3){
+                          maiorPop3 = d.POPULACAO_TOTAL;
+                      }
+                      
+                      if((d.POPULACAO_TOTAL) < menorPop3){
+                          menorPop3 = d.POPULACAO_TOTAL;
+                      }
+                      
+                  }
+                  
+                  if (scales["populacao"](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id)) == 4){
+                      if(menorPop4 == 0){
+                          menorPop4 = d.POPULACAO_TOTAL;
+                      }
+                      
+                      if((d.POPULACAO_TOTAL) > maiorPop4){
+                          maiorPop4 = d.POPULACAO_TOTAL;
+                      }
+                      
+                      if((d.POPULACAO_TOTAL) < menorPop4){
+                          menorPop4 = d.POPULACAO_TOTAL;
+                      }
+                      
+                  }
+                  
+                  if (scales["populacao"](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id)) == 5){
+                      if(menorPop5 == 0){
+                          menorPop5 = d.POPULACAO_TOTAL;
+                      }
+                      
+                      if((d.POPULACAO_TOTAL) > maiorPop5){
+                          maiorPop5 = d.POPULACAO_TOTAL;
+                      }
+                      
+                      if((d.POPULACAO_TOTAL) < menorPop5){
+                          menorPop5 = d.POPULACAO_TOTAL;
+                      }
+                      
+                  }
+                  
+                  if (scales["populacao"](d.POPULACAO_TOTAL = attributeOneDataArray.get(d.properties.id)) == 6){
+                      if(menorPop6 == 0){
+                          menorPop6 = d.POPULACAO_TOTAL;
+                      }
+                      
+                      if((d.POPULACAO_TOTAL) > maiorPop6){
+                          maiorPop6 = d.POPULACAO_TOTAL;
+                      }
+                      
+                      if((d.POPULACAO_TOTAL) < menorPop6){
+                          menorPop6 = d.POPULACAO_TOTAL;
+                      }
+                      
+                  }
                   
                   return textureTemp.url();
                   return cor;
@@ -468,6 +738,34 @@ function returnDownOne(){
         currentPopulacao = "data/brasil/" + novoDrillDown + "Populacao.tsv";
         currentArea = "data/brasil/" + novoDrillDown + "Area.tsv";
     
+        menor1 = 0;
+        menor2 = 0;
+        menor3 = 0;
+        menor4 = 0;
+        menor5 = 0;
+        menor6 = 0;
+
+        maior1 = 0;
+        maior2 = 0;
+        maior3 = 0;
+        maior4 = 0;
+        maior5 = 0;
+        maior6 = 0;
+    
+        menorPop1 = 0;
+        menorPop2 = 0;
+        menorPop3 = 0;
+        menorPop4 = 0;
+        menorPop5 = 0;
+        menorPop6 = 0;
+
+        maiorPop1 = 0;
+        maiorPop2 = 0;
+        maiorPop3 = 0;
+        maiorPop4 = 0;
+        maiorPop5 = 0;
+        maiorPop6 = 0;
+    
         document.getElementById("hierarchicTwo").innerHTML = "";
         document.getElementById("hierarchicThree").innerHTML = "";
     
@@ -496,6 +794,34 @@ function returnDownTwo(){
         currentPopulacao = "data/brasil/" + novoDrillDown + "Populacao.tsv";
         currentArea = "data/brasil/" + novoDrillDown + "Area.tsv";
     
+        menor1 = 0;
+        menor2 = 0;
+        menor3 = 0;
+        menor4 = 0;
+        menor5 = 0;
+        menor6 = 0;
+
+        maior1 = 0;
+        maior2 = 0;
+        maior3 = 0;
+        maior4 = 0;
+        maior5 = 0;
+        maior6 = 0;
+    
+        menorPop1 = 0;
+        menorPop2 = 0;
+        menorPop3 = 0;
+        menorPop4 = 0;
+        menorPop5 = 0;
+        menorPop6 = 0;
+
+        maiorPop1 = 0;
+        maiorPop2 = 0;
+        maiorPop3 = 0;
+        maiorPop4 = 0;
+        maiorPop5 = 0;
+        maiorPop6 = 0;
+    
         projection
         .scale(1)
         .translate([0, 0]);
@@ -522,6 +848,34 @@ function returnDownThree(){
         currentMap = "map/" + novoDrillDown + ".json";
         currentPopulacao = "data/brasil/" + novoDrillDown + "Populacao.tsv";
         currentArea = "data/brasil/" + novoDrillDown + "Area.tsv";
+    
+        menor1 = 0;
+        menor2 = 0;
+        menor3 = 0;
+        menor4 = 0;
+        menor5 = 0;
+        menor6 = 0;
+
+        maior1 = 0;
+        maior2 = 0;
+        maior3 = 0;
+        maior4 = 0;
+        maior5 = 0;
+        maior6 = 0;
+    
+        menorPop1 = 0;
+        menorPop2 = 0;
+        menorPop3 = 0;
+        menorPop4 = 0;
+        menorPop5 = 0;
+        menorPop6 = 0;
+
+        maiorPop1 = 0;
+        maiorPop2 = 0;
+        maiorPop3 = 0;
+        maiorPop4 = 0;
+        maiorPop5 = 0;
+        maiorPop6 = 0;
     
         projection
         .scale(1)

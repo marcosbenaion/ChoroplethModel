@@ -62,7 +62,7 @@ function update(data){
 }//end update
 
 //set up chart
-var margin = {top: 20, right: 20, bottom: 95, left: 70};
+var margin = {top: 20, right: 20, bottom: 95, left: 200};
 var width = 450;
 var height = 500;
 

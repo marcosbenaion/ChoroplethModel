@@ -18,6 +18,118 @@ body {
     font:normal 14px sans-serif;
 }
 
+#area{
+    font-size: 12px;
+    display: block;
+    position: absolute;
+    left: 60px;
+    top: 80px;
+}
+
+#populacao{
+    font-size: 12px;
+    display: block;
+    position: absolute;
+    left: 570px;
+    top: 80px;
+}
+
+#texto1{
+    font-size: 8px;
+    display: block;
+    position: absolute;
+    left: 60px;
+    top: 105px;
+}
+
+#texto2{
+    font-size: 8px;
+    display: block;
+    position: absolute;
+    left: 60px;
+    top: 155px;
+}
+
+#texto3{
+    font-size: 8px;
+    display: block;
+    position: absolute;
+    left: 60px;
+    top: 205px;
+}
+
+#texto4{
+    font-size: 8px;
+    display: block;
+    position: absolute;
+    left: 60px;
+    top: 255px;
+}
+
+#texto5{
+    font-size: 8px;
+    display: block;
+    position: absolute;
+    left: 60px;
+    top: 305px;
+}
+
+#texto6{
+    font-size: 8px;
+    display: block;
+    position: absolute;
+    left: 60px;
+    top: 355px;
+}
+
+#texto7{
+    font-size: 8px;
+    display: block;
+    position: absolute;
+    left: 570px;
+    top: 105px;
+}
+
+#texto8{
+    font-size: 8px;
+    display: block;
+    position: absolute;
+    left: 570px;
+    top: 155px;
+}
+
+#texto9{
+    font-size: 8px;
+    display: block;
+    position: absolute;
+    left: 570px;
+    top: 205px;
+}
+
+#texto10{
+    font-size: 8px;
+    display: block;
+    position: absolute;
+    left: 570px;
+    top: 255px;
+}
+
+#texto11{
+    font-size: 8px;
+    display: block;
+    position: absolute;
+    left: 570px;
+    top: 305px;
+}
+
+#texto12{
+    font-size: 8px;
+    display: block;
+    position: absolute;
+    left: 570px;
+    top: 355px;
+}
+
 #form {
     position: absolute;
     top: 10px;
@@ -97,8 +209,8 @@ path {
 }*/
 
 .button text {
-    font-size: 15px;
-    fill: #eee;
+    font-size: 8px;
+    fill: red;
     pointer-events: none;
     text-anchor: middle;
     -moz-user-select: none;
